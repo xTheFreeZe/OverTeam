@@ -2,6 +2,10 @@
 const fs = require('fs');
 
 const {
+  Bot_Token,
+} = require('./config.json');
+
+const {
   Client,
   Intents,
 } = require('discord.js');
@@ -22,4 +26,4 @@ for (const file of eventFiles) {
   }
 }
 
-client.login(process.env.BOT_TOKEN);
+client.login(Bot_Token);

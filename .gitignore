@@ -1,3 +1,4 @@
 #Ignore the node modules
 node_modules
 .env
+config.json
