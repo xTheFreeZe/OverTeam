@@ -1,8 +1,8 @@
+/* eslint-disable no-undef */
 const fs = require('fs');
 
 const {
   Client,
-  Collection,
   Intents,
 } = require('discord.js');
 
