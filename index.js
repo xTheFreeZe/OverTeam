@@ -32,8 +32,9 @@ for (const file of eventFiles) {
 }
 
 const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
+const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
 
-const commandFiles = [...TestFiles];
+const commandFiles = [...TestFiles, ...ScheduleFiles];
 
 for (const file of commandFiles) {
 

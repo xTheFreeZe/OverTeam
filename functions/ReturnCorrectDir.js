@@ -9,12 +9,20 @@ const fs = require('fs');
 const ReturnCorrectDir = (file) => {
 
   const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
+  const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
 
   if (TestFiles.includes(file)) {
-    console.log('Found file in testing directory');
+
     return 'testing'
+
+  } else if (ScheduleFiles.includes(file)) {
+
+    return 'schedule'
+
   } else {
+
     throw new Error('Was not able to find directory for file: ' + file);
+
   }
 
 };
