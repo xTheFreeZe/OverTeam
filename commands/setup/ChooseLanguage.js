@@ -3,6 +3,7 @@ const {
 } = require('@discordjs/builders');
 
 const ChangeServerLanguage = require('../../functions/ChangeServerLangauge');
+const TranslateText = require('../../functions/TranslateText');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -15,8 +16,8 @@ module.exports = {
         .setDescription('The language you want the bot to use')
         .setRequired(true)
         .addChoices(
-          { name: 'English', value: 'english' },
-          { name: 'German', value: 'german' },
+          { name: 'English', value: 'en' },
+          { name: 'German', value: 'de' },
         )),
 
   async execute(interaction) {
@@ -28,12 +29,22 @@ module.exports = {
     const data = {
       ServerName: interaction.guild.name,
       ServerID: interaction.guild.id,
-      Language: ChosenLanguage
+      Language: ChosenLanguage,
+      Text: 'The bot will now talk in the chosen language',
     }
 
     ChangeServerLanguage.call(data);
 
-    interaction.reply('Language changed'); // This is a placeholder, will be changed so it actually changes the language
+    try {
+
+      interaction.reply(TranslateText.call(data));
+
+    } catch(error) {
+
+      console.error(error);
+      interaction.reply('Something went wrong while trying to change the language');
+
+    }
   }
 
 };

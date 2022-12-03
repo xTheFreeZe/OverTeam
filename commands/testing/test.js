@@ -13,8 +13,11 @@ module.exports = {
     console.log('Test command executed');
 
     const data = Cache.get(interaction.guild.id);
+    console.log("🚀 ~ file: test.js:16 ~ execute ~ Cache.get(interaction.guild.id);", Cache.get(interaction.guild.id))
 
-    interaction.reply("Cache data:", data);
+    interaction.reply("Cache data:", Cache.data, data);
+
+    console.log(Cache);
 
   },
 };

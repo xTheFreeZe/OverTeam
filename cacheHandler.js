@@ -4,10 +4,6 @@ const nodeCrone = require('node-cron');
 
 const Cache = new NodeCache();
 
-module.exports = Cache;
-
-console.log('Cache initialized');
-
 //Clear the cache every 24 hours
 
 const RefreshCache = nodeCrone.schedule('0 0 * * *', () => { // 0 0 * * * = Every day at midnight
@@ -20,4 +16,6 @@ const RefreshCache = nodeCrone.schedule('0 0 * * *', () => { // 0 0 * * * = Ever
   scheduled: false
 });
 
-// RefreshCache.start();
+module.exports = Cache;
+
+console.log('Cache initialized');

@@ -53,7 +53,7 @@ console.log('Loaded all files');
 
 client.on('ready', async () => {
 
-  ConnectToDatabase(); //Calling this will establish a connection to the database
+  //ConnectToDatabase(); //Calling this will establish a connection to the database
 
 });
 
