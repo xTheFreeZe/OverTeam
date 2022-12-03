@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 const fs = require('fs');
 
@@ -11,6 +12,7 @@ const {
   Collection,
 } = require('discord.js');
 
+const ConnectToDatabase = require('./functions/ConnectToDB.js');
 const ReturnCorrectDir = require('./functions/ReturnCorrectDir.js');
 
 const client = new Client({
@@ -33,8 +35,9 @@ for (const file of eventFiles) {
 
 const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
 const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
+const SetupFiles = fs.readdirSync('./commands/setup').filter(file => file.endsWith('js'));
 
-const commandFiles = [...TestFiles, ...ScheduleFiles];
+const commandFiles = [...TestFiles, ...ScheduleFiles, ...SetupFiles];
 
 for (const file of commandFiles) {
 
@@ -47,6 +50,12 @@ for (const file of commandFiles) {
 }
 
 console.log('Loaded all files');
+
+client.on('ready', async () => {
+
+  //ConnectToDatabase(); //Calling this will establish a connection to the database
+
+});
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;

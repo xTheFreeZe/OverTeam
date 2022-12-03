@@ -10,6 +10,7 @@ const ReturnCorrectDir = (file) => {
 
   const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
   const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
+  const SetupFiles = fs.readdirSync('./commands/setup').filter(file => file.endsWith('js'));
 
   if (TestFiles.includes(file)) {
 
@@ -18,6 +19,10 @@ const ReturnCorrectDir = (file) => {
   } else if (ScheduleFiles.includes(file)) {
 
     return 'schedule'
+
+  } else if (SetupFiles.includes(file)) {
+
+    return 'setup'
 
   } else {
 

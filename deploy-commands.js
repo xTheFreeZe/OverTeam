@@ -6,6 +6,7 @@ const fs = require('node:fs');
 const commands = [];
 const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
 const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
+const SetupFiles = fs.readdirSync('./commands/setup').filter(file => file.endsWith('js'));
 
 for (const file of TestFiles) {
   const command = require(`./commands/testing/${file}`);
@@ -17,6 +18,12 @@ for (const file of ScheduleFiles) {
   const command = require(`./commands/schedule/${file}`);
   commands.push(command.data.toJSON());
   console.log('Recieved Schedule files');
+}
+
+for (const file of SetupFiles) {
+  const command = require(`./commands/setup/${file}`);
+  commands.push(command.data.toJSON());
+  console.log('Recieved Setup files');
 }
 
 const rest = new REST({ version: '9' }).setToken(Bot_Token);
