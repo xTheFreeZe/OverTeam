@@ -2,7 +2,7 @@ const {
   SlashCommandBuilder
 } = require('@discordjs/builders');
 
-const ChangeServerLanguage = require('../functions/ChangeServerLanguage.js');
+const ChangeServerLanguage = require('../../functions/ChangeServerLangauge');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -25,7 +25,13 @@ module.exports = {
 
     console.log(ChosenLanguage);
 
-    await ChangeServerLanguage(ChosenLanguage);
+    const data = {
+      ServerName: interaction.guild.name,
+      ServerID: interaction.guild.id,
+      Language: ChosenLanguage
+    }
+
+    ChangeServerLanguage.call(data);
 
     interaction.reply('Language changed'); // This is a placeholder, will be changed so it actually changes the language
   }
