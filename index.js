@@ -33,27 +33,37 @@ for (const file of eventFiles) {
   }
 }
 
-const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
-const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
-const SetupFiles = fs.readdirSync('./commands/setup').filter(file => file.endsWith('js'));
+fs.readdir('./commands/', (err, folders) => {
 
-const commandFiles = [...TestFiles, ...ScheduleFiles, ...SetupFiles];
+  if (err) {
+    console.log(err);
+    return;
+  }
 
-for (const file of commandFiles) {
+  for (const folder of folders) {
 
-  let dir = ReturnCorrectDir(file);
+    fs.readdir(`./commands/${folder}`, (err, file) => {
 
-  const command = require(`./commands/${dir}/${file}`);
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-  client.commands.set(command.data.name, command);
+      const command = require(`./commands/${folder}/${file}`);
 
-}
+      client.commands.set(command.data.name, command);
+
+    });
+
+  }
+
+});
 
 console.log('Loaded all files');
 
 client.on('ready', async () => {
 
-  //ConnectToDatabase(); //Calling this will establish a connection to the database
+  ConnectToDatabase(); //Calling this will establish a connection to the database
 
 });
 

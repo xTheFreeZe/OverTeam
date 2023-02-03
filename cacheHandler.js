@@ -16,6 +16,8 @@ const RefreshCache = nodeCrone.schedule('0 0 * * *', () => { // 0 0 * * * = Ever
   scheduled: false
 });
 
+RefreshCache.start();
+
 module.exports = Cache;
 
 console.log('Cache initialized');

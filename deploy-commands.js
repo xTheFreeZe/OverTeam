@@ -4,27 +4,44 @@ const { Bot_Token, Client_ID } = require('./config.json');
 const fs = require('node:fs');
 
 const commands = [];
-const TestFiles = fs.readdirSync('./commands/testing').filter(file => file.endsWith('js'));
-const ScheduleFiles = fs.readdirSync('./commands/schedule').filter(file => file.endsWith('js'));
-const SetupFiles = fs.readdirSync('./commands/setup').filter(file => file.endsWith('js'));
 
-for (const file of TestFiles) {
-  const command = require(`./commands/testing/${file}`);
-  commands.push(command.data.toJSON());
-  console.log('Recieved Testing files');
-}
+fs.readdir('./commands/', (err, folders) => {
 
-for (const file of ScheduleFiles) {
-  const command = require(`./commands/schedule/${file}`);
-  commands.push(command.data.toJSON());
-  console.log('Recieved Schedule files');
-}
+  if (err) {
+    console.log(err);
+    return;
+  }
 
-for (const file of SetupFiles) {
-  const command = require(`./commands/setup/${file}`);
-  commands.push(command.data.toJSON());
-  console.log('Recieved Setup files');
-}
+  for (const folder of folders) {
+
+    (async () => {
+
+      fs.readdir(`./commands/${folder}`, (err, file) => {
+
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        file.forEach((f) => {
+
+          const command = require(`./commands/${folder}/${f}`);
+          const data = command.data.toJSON();
+
+          commands.push(data);
+
+        });
+
+      });
+
+
+    })
+
+  }
+
+});
+
+console.log(commands);
 
 const rest = new REST({ version: '9' }).setToken(Bot_Token);
 
