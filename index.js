@@ -68,6 +68,8 @@ fs.readdir('./commands/', (err, folders) => {
 
 });
 
+//TODO: Fix the bot loading all files. Start the bot to see what I mean.
+
 console.log('Loaded all files');
 
 client.on('ready', async () => {
