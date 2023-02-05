@@ -13,7 +13,6 @@ const {
 } = require('discord.js');
 
 const ConnectToDatabase = require('./functions/ConnectToDB.js');
-const ReturnCorrectDir = require('./functions/ReturnCorrectDir.js');
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_PRESENCES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.DIRECT_MESSAGES],
@@ -36,7 +35,7 @@ for (const file of eventFiles) {
 fs.readdir('./commands/', (err, folders) => {
 
   if (err) {
-    console.log(err);
+    console.log('Folder error:', err);
     return;
   }
 
@@ -45,13 +44,23 @@ fs.readdir('./commands/', (err, folders) => {
     fs.readdir(`./commands/${folder}`, (err, file) => {
 
       if (err) {
-        console.log(err);
+        if (!file) return;
+
+        console.log('File error:', err);
         return;
       }
 
-      const command = require(`./commands/${folder}/${file}`);
+      try {
 
-      client.commands.set(command.data.name, command);
+        const command = require(`./commands/${folder}/${file}`);
+
+        client.commands.set(command.data.name, command);
+
+      } catch (error) {
+
+        return console.log('Command error:', error);
+
+      }
 
     });
 
