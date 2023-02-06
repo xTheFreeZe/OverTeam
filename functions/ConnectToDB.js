@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+dotenv.config();
 
 /**
  * @returns {Promise<void>}
@@ -6,6 +8,8 @@ const mongoose = require('mongoose');
  * @description Connects to the database by passing in the SRV string
  */
 const ConnectToDatabase = async () => {
+
+  mongoose.set('strictQuery', true);
 
   console.log('Trying to connect...');
   // eslint-disable-next-line no-undef

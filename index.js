@@ -44,6 +44,7 @@ fs.readdir('./commands/', (err, folders) => {
     fs.readdir(`./commands/${folder}`, (err, file) => {
 
       if (err) {
+
         if (!file) return;
 
         console.log('File error:', err);
@@ -52,9 +53,13 @@ fs.readdir('./commands/', (err, folders) => {
 
       try {
 
-        const command = require(`./commands/${folder}/${file}`);
+        for (const f of file) {
 
-        client.commands.set(command.data.name, command);
+          const command = require(`./commands/${folder}/${f}`);
+
+          client.commands.set(command.data.name, command);
+
+        }
 
       } catch (error) {
 
@@ -66,22 +71,14 @@ fs.readdir('./commands/', (err, folders) => {
 
   }
 
-});
-
-//TODO: Fix the bot loading all files. Start the bot to see what I mean.
-
-console.log('Loaded all files');
-
-client.on('ready', async () => {
-
-  ConnectToDatabase(); //Calling this will establish a connection to the database
+  console.log('Loaded all files');
 
 });
 
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
-  if (!interaction.guild) return interaction.reply({ content: 'You can\'t use this command in DMs!' });
+  if (!interaction.guild) return interaction.reply({content: 'You can\'t use this command in DMs!'});
 
   const command = client.commands.get(interaction.commandName);
 

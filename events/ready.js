@@ -1,13 +1,17 @@
+const ConnectToDatabase = require("../functions/ConnectToDB");
+
 module.exports = {
   name: 'ready',
   once: true,
-  execute(client) {
+  async execute(client) {
+
+    //await ConnectToDatabase();
 
     client.user.setStatus('online');
     client.user.setPresence({
       activities: [{
-        name: `2ez | /help`,
-        type: "WATCHING"
+        name: `Overwatch`,
+        type: "PLAYING"
       }]
     });
 
