@@ -761,22 +761,21 @@ module.exports = {
                       description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
                       scheduleCreator: `${interaction.member}`,
                       scheduleCreatorID: `${interaction.member.id}`,
+                      users: {
+                        userOne: `${User_One_Array}`,
+                        userSecond: `${User_Second_Array}`,
+                        userThird: `${User_Third_Array}`,
+                        userFourth: `${User_Fourth_Array}`,
+                        userFifth: `${User_Fith_Array}`,
+                        userSixth: `${User_Sixth_Array}`,
+                        userSeventh: `${User_Seventh_Array}`,
+                        userEighth: `${User_Eighth_Array}`,
+                        userNinth: `${User_Ninth_Array}`,
+                        userTenth: `${User_Tenth_Array}`,
+                      },
                     };
 
-                    const playerData = {
-                      userOne: `${User_One_Array}`,
-                      userSecond: `${User_Second_Array}`,
-                      userThird: `${User_Third_Array}`,
-                      userFourth: `${User_Fourth_Array}`,
-                      userFifth: `${User_Fith_Array}`,
-                      userSixth: `${User_Sixth_Array}`,
-                      userSeventh: `${User_Seventh_Array}`,
-                      userEighth: `${User_Eighth_Array}`,
-                      userNinth: `${User_Ninth_Array}`,
-                      userTenth: `${User_Tenth_Array}`,
-                    };
-
-                    CreateNewPreset(presetData, playerData);
+                    CreateNewPreset(presetData);
 
                   }
 

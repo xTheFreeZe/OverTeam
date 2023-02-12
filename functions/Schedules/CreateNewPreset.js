@@ -3,14 +3,11 @@ const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema
 /**
  * Create a new schedule preset. This will be saved to the database.
  * @param presetData
- * @param playerData
  * @constructor
  */
-const CreateNewPreset = (presetData, playerData) => {
+const CreateNewPreset = (presetData) => {
 
   console.log(presetData);
-
-  console.log(playerData);
 
   const newPreset = new SchedulePresetSchema({
     name: presetData.name,
@@ -21,20 +18,25 @@ const CreateNewPreset = (presetData, playerData) => {
     scheduleCreator: presetData.scheduleCreator,
     scheduleCreatorID: presetData.scheduleCreatorID,
     users: {
-      userOne: playerData.userOne,
-      userTwo: playerData.userSecond,
-      userThree: playerData.userThird,
-      userFour: playerData.userFourth,
-      userFive: playerData.userFifth,
-      userSix: playerData.userSixth,
-      userSeven: playerData.userSeventh,
-      userEight: playerData.userEighth,
-      userNine: playerData.userNinth,
-      userTen: playerData.userTenth,
+      userOne: presetData.users.userOne,
+      userTwo: presetData.users.userSecond,
+      userThree: presetData.users.userThird,
+      userFour: presetData.users.userFourth,
+      userFive: presetData.users.userFifth,
+      userSix: presetData.users.userSixth,
+      userSeven: presetData.users.userSeventh,
+      userEight: presetData.users.userEighth,
+      userNine: presetData.users.userNinth,
+      userTen: presetData.users.userTenth,
     },
   });
 
-  newPreset.save().then(() => console.log('Saved new preset to database!'));
+  newPreset.save().then(() => console.log('Saved new preset to database!')).catch((e) => {
+
+    console.error(e);
+    //TODO: Fix bug that schedules can not be saved
+
+  });
 
 };
 
