@@ -18,7 +18,9 @@ const SchedulePresetSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  Description: requiredString,
+  description: requiredString,
+  scheduleCreator: requiredString,
+  scheduleCreatorID: requiredNumber,
   users: {
     userOne: requiredString,
     userTwo: requiredString,
@@ -31,8 +33,6 @@ const SchedulePresetSchema = new mongoose.Schema({
     userNine: requiredString,
     userTen: requiredString,
   },
-  scheduleCreator: requiredString,
-  scheduleCreatorID: requiredNumber,
 });
 
 module.exports = mongoose.model('SchedulePreset', SchedulePresetSchema);

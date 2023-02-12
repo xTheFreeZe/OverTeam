@@ -758,7 +758,7 @@ module.exports = {
                       creationChannel: `${interaction.channel.name}`,
                       channelID: `${interaction.channel.id}`,
                       creationDate: Date.now(),
-                      Description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
+                      description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
                       scheduleCreator: `${interaction.member}`,
                       scheduleCreatorID: `${interaction.member.id}`,
                     };
@@ -768,7 +768,7 @@ module.exports = {
                       userSecond: `${User_Second_Array}`,
                       userThird: `${User_Third_Array}`,
                       userFourth: `${User_Fourth_Array}`,
-                      userFith: `${User_Fith_Array}`,
+                      userFifth: `${User_Fith_Array}`,
                       userSixth: `${User_Sixth_Array}`,
                       userSeventh: `${User_Seventh_Array}`,
                       userEighth: `${User_Eighth_Array}`,
