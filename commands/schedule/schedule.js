@@ -85,10 +85,6 @@ module.exports = {
 
     let MentionMessage = [];
 
-    let TipMessage = ("");
-
-    const PresetSchedulePath = `./Schedule_${interaction.channel.parent.name}.json`;
-
     /**
      * This is the boolean used for status updates. If true, the author of the schedule will recieve updates everytime someone reacted!
      * @type {boolean}
@@ -310,17 +306,6 @@ module.exports = {
     event.setDate(UnixDay);
     event.setHours(`${UnixTime - 1}`, 0, 0, 0); //Lower the time by 2 hours to get the correct time
 
-    // if (UnixTime.includes(":")) {
-    //   event.setDate(UnixDay);
-    //   event.setHours(`${UnixTime.split(':')[0] - 1}`, UnixTime.split(':')[1], 0, 0); //Lower the time by 1 hour to get the correct time
-
-    // } else {
-
-    //   event.setDate(UnixDay);
-    //   event.setHours(`${UnixTime - 1}`, 0, 0, 0); //Lower the time by 2 hours to get the correct time
-
-    // }
-
     try {
 
       ScrimDescripton.push(OptionalScrimDescription);
@@ -342,20 +327,6 @@ module.exports = {
     let noEmoji = "<:2ez_Schedule_No:933803257120313406>";
     let neutralEmoji = "<:2ez_neutral:892794587712745543>";
     let tentativeEmoji = "<:2ez_Schedule_tentative:933802728138899556>";
-
-    /** For schedules
-     * <:2ezBotBetaRedBig1:1015625782095269909>
-     * <:2ezBotBetaRedBig2:1015625784389546024>
-     *
-     * <:2ezBotBetaBlueBig1:1015623441786867853>
-     * <:2ezBotBetaBlueBig2:1015623443321991229>
-     *
-     * <:2ezBotNewBlueBig1:1015625785576530003>
-     * <:2ezBotNewBlueBig2:1015625786876760087>
-     *
-     * <:2ezBotNewRedBig1:1015625788923592824>
-     * <:2ezBotNewRedBig2:1015625790446121031>
-     */
 
     try { //Push in every user + their emoji in their personal array
 

@@ -159,32 +159,19 @@ module.exports = {
       ReminderDay = "*";
     }
 
-    // if (ScrimTime.includes(':')) { //checks if time is valid
-
-    //   //regex for checking if the part before : is a number and if the part after : is a number
-    //   const regex = /^([0-9]{1,2}):([0-9]{1,2})$/;
-    //   if (!regex.test(ScrimTime)) return interaction.reply('Please enter a valid time for the scrim time field!');
-
-    // }
-
-    // -------------------------------------------------- Reminder Schedules --------------------------------------------------//
-    //Set a cron schedule for the bot to send reminders to the users.
-    //45 17 * * * - Summer time
-    //45 18 * * * - Winter time
-
     const reminderschedule = nodeCron.schedule(`45 18 * * *`, () => {
 
       CreateScheduleReminderMessage(AllUsersWithEmojis, WillNotPingArray, interaction.channel);
 
     }, {
-      scheduled: true
+      scheduled: false
     });
 
     var closereminders = nodeCron.schedule(`47 18 * * *`, () => { //47 17 * * * This cron schedule deletes the reminders after the scrim has ended so it's not sent twice.
       reminderschedule.stop();
       remindercreator.stop();
     }, {
-      scheduled: true
+      scheduled: false
     });
 
     var customreminder = nodeCron.schedule(`45 18 ${ReminderDay} * *`, () => { // 45 17 ${ReminderDay} * *- Set a cron schedule for the bot to send reminders to the users.
@@ -298,10 +285,10 @@ module.exports = {
 
     }
 
-    let yesEmoji = "<:2ez_Schedule_Yes:933802728130494524>";
-    let noEmoji = "<:2ez_Schedule_No:933803257120313406>";
-    let neutralEmoji = "<:2ez_neutral:892794587712745543>";
-    let tentativeEmoji = "<:2ez_Schedule_tentative:933802728138899556>";
+    let yesEmoji = "<:OverTeam_Yes:1074131419535777884>";
+    let noEmoji = "<:OverTeam_No:1074131594593452134>";
+    let neutralEmoji = "<:OverTeam_Neutral:1074132245696233573>";
+    let tentativeEmoji = "<:OverTeam_Tentative:1074131651132666017>";
 
     try { //Push in every user + their emoji in their personal array
 
