@@ -581,7 +581,7 @@ module.exports = {
 
           ReactionCollector.on('collect', i => {
 
-            const IgnoreButtons = new RegExp(`^(ButManage|ButDelete)$`); //Ignore the buttons we don't need
+            const IgnoreButtons = new RegExp(`^(ButDelete)$`); //Ignore the buttons we don't need
 
             if (IgnoreButtons.test(i.customId)) return;
 
@@ -698,11 +698,6 @@ module.exports = {
               ],
             });
             i.deferUpdate();
-          });
-
-          OptionButtonCollector.on('collect', async i => {
-
-            console.log("Event triggered");
 
             if (i.customId === "ButSave") {
 
@@ -829,7 +824,6 @@ module.exports = {
                     try {
 
                       reminderschedule.stop();
-                      remindercreator.stop();
                       closereminders.stop();
                       customreminder.stop();
                       stopcustomreminder.stop();
@@ -941,7 +935,7 @@ module.exports = {
 
               });
             }
-            ;
+
           });
 
           DeleteCollector.on('collect', async (i) => {
