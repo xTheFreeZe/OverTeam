@@ -2,7 +2,7 @@ module.exports = {
   name: 'interactionCreate',
   async execute(interaction) {
 
-    console.log('Interaction created');
+    if (interaction.isButton()) return;
 
   }
 

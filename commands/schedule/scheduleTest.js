@@ -503,19 +503,19 @@ module.exports = {
         .addComponents(
             new MessageButton()
                 .setCustomId('ButYes')
-                .setEmoji('<:2ez_Schedule_Yes:933802728130494524>')
+                .setEmoji('<:OverTeam_Yes:1074131419535777884>')
                 .setStyle('SECONDARY'),
         )
         .addComponents(
             new MessageButton()
                 .setCustomId('ButNo')
-                .setEmoji('<:2ez_Schedule_No:933803257120313406>')
+                .setEmoji('<:OverTeam_No:1074131594593452134>')
                 .setStyle('SECONDARY'),
         )
         .addComponents(
             new MessageButton()
                 .setCustomId('ButIdk')
-                .setEmoji('<:2ez_Schedule_tentative:933802728138899556>')
+                .setEmoji('<:OverTeam_Tentative:1074131651132666017>')
                 .setStyle('SECONDARY'),
         )
         .addComponents(
@@ -531,7 +531,7 @@ module.exports = {
                 .setStyle("DANGER")
         );
 
-    await interaction.reply(`Here is your schedule for the following users: ${MentionMessage} \n\n<:2ezBotNewRedBig1:1015625788923592824><:2ezBotNewRedBig2:1015625790446121031> You can now let your teammates know, that you will join later: \n**Manage schedule** -> **I'll be late** ${TipMessage}`).then(
+    await interaction.reply(`Here is your schedule for the following users: ${MentionMessage}`).then(
         interaction.channel.send({
           embeds: [
             ScheduleEmbed
