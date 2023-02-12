@@ -564,26 +564,19 @@ module.exports = {
             componentType: 'BUTTON'
           });
 
-          const OptionButtonCollector = sentMessage.createMessageComponentCollector({
-            componentType: 'BUTTON'
-          });
-
           const DeleteCollector = sentMessage.createMessageComponentCollector({
             componentType: 'BUTTON'
           });
 
-          interaction.channel.send({
-            content: 'Schedule options',
-            components: [
-              Options
-            ],
-          });
-
           ReactionCollector.on('collect', i => {
+
+            console.log(i.customId);
 
             const IgnoreButtons = new RegExp(`^(ButDelete)$`); //Ignore the buttons we don't need
 
             if (IgnoreButtons.test(i.customId)) return;
+
+            const ValidButtons = new RegExp(`^(ButYes|ButNo|ButIdk)$`); //Check if the button is valid
 
             if (!Check_User_Array.includes(i.user.id)) {
               i.reply({
@@ -699,242 +692,259 @@ module.exports = {
             });
             i.deferUpdate();
 
-            if (i.customId === "ButSave") {
+          });
 
-              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+          interaction.channel.send({
+            content: 'Schedule options',
+            components: [
+              Options
+            ],
+          }).then(sentMessage => {
 
-              if (i.user.id !== interaction.member.user.id) {
-                i.reply({
-                  content: "You are not able to use this!",
-                  embeds: [
-                    NotAbleToDeleteEmbed
-                  ],
-                })
-                return;
+            const OptionCollector = sentMessage.createMessageComponentCollector({
+              componentType: 'BUTTON'
+            });
+
+            OptionCollector.on('collect', i => {
+
+              if (i.customId === "ButSave") {
+
+                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+                if (i.user.id !== interaction.member.user.id) {
+                  i.reply({
+                    content: "You are not able to use this!",
+                    embeds: [
+                      NotAbleToDeleteEmbed
+                    ],
+                  })
+                  return;
+                }
+
+                const presetData = {
+                  name: `${interaction.channel.parent.name}`,
+                  creationChannel: `${interaction.channel.name}`,
+                  channelID: `${interaction.channel.id}`,
+                  creationDate: `${Date.now()}`,
+                  description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
+                  scheduleCreator: `${interaction.member}`,
+                  scheduleCreatorID: `${interaction.member.id}`,
+                  users: {
+                    userOne: `${User_One_Array}`,
+                    userSecond: `${User_Second_Array}`,
+                    userThird: `${User_Third_Array}`,
+                    userFourth: `${User_Fourth_Array}`,
+                    userFifth: `${User_Fith_Array}`,
+                    userSixth: `${User_Sixth_Array}`,
+                    userSeventh: `${User_Seventh_Array}`,
+                    userEighth: `${User_Eighth_Array}`,
+                    userNinth: `${User_Ninth_Array}`,
+                    userTenth: `${User_Tenth_Array}`,
+                  },
+                };
+
+                CreateNewPreset(presetData);
+
               }
 
-              const presetData = {
-                name: `${interaction.channel.parent.name}`,
-                creationChannel: `${interaction.channel.name}`,
-                channelID: `${interaction.channel.id}`,
-                creationDate: `${Date.now()}`,
-                description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
-                scheduleCreator: `${interaction.member}`,
-                scheduleCreatorID: `${interaction.member.id}`,
-                users: {
-                  userOne: `${User_One_Array}`,
-                  userSecond: `${User_Second_Array}`,
-                  userThird: `${User_Third_Array}`,
-                  userFourth: `${User_Fourth_Array}`,
-                  userFifth: `${User_Fith_Array}`,
-                  userSixth: `${User_Sixth_Array}`,
-                  userSeventh: `${User_Seventh_Array}`,
-                  userEighth: `${User_Eighth_Array}`,
-                  userNinth: `${User_Ninth_Array}`,
-                  userTenth: `${User_Tenth_Array}`,
-                },
-              };
+              if (i.customId === "ButManageReminder") {
 
-              CreateNewPreset(presetData);
+                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
 
-            }
+                if (!Check_User_Array.includes(i.user.id)) {
+                  i.reply({
+                    content: "You are not able to use this!",
+                    embeds: [
+                      NotAbleToReactEmbed
+                    ],
+                    ephemeral: true
+                  })
+                  return;
+                }
 
-            if (i.customId === "ButManageReminder") {
+                const ReminderOptions = new MessageActionRow()
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('ButDisableReminderForYou')
+                            .setLabel('Disable for you')
+                            .setStyle('DANGER'),
+                    )
+                    .addComponents(
+                        new MessageButton()
+                            .setCustomId('ButDisableReminderForEveryone')
+                            .setLabel('Disable for everyone')
+                            .setStyle('DANGER'),
+                    );
 
-              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-              if (!Check_User_Array.includes(i.user.id)) {
-                i.reply({
-                  content: "You are not able to use this!",
-                  embeds: [
-                    NotAbleToReactEmbed
+                i.channel.send({
+                  content: "What do you want to do?",
+                  components: [
+                    ReminderOptions
                   ],
-                  ephemeral: true
-                })
-                return;
-              }
+                }).then(sentMessage => {
 
-              const ReminderOptions = new MessageActionRow()
-                  .addComponents(
-                      new MessageButton()
-                          .setCustomId('ButDisableReminderForYou')
-                          .setLabel('Disable for you')
-                          .setStyle('DANGER'),
-                  )
-                  .addComponents(
-                      new MessageButton()
-                          .setCustomId('ButDisableReminderForEveryone')
-                          .setLabel('Disable for everyone')
-                          .setStyle('DANGER'),
-                  );
+                  const DisableReminderForYou = sentMessage.createMessageComponentCollector({
+                    componentType: 'BUTTON'
+                  });
 
-              i.channel.send({
-                content: "What do you want to do?",
-                components: [
-                  ReminderOptions
-                ],
-              }).then(sentMessage => {
+                  const DisableReminderForEveryone = sentMessage.createMessageComponentCollector({
+                    componentType: 'BUTTON'
+                  });
 
-                const DisableReminderForYou = sentMessage.createMessageComponentCollector({
-                  componentType: 'BUTTON'
-                });
+                  DisableReminderForYou.on('collect', async i => {
 
-                const DisableReminderForEveryone = sentMessage.createMessageComponentCollector({
-                  componentType: 'BUTTON'
-                });
+                    if (i.customId === 'ButDisableReminderForYou') {
 
-                DisableReminderForYou.on('collect', async i => {
+                      if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
 
-                  if (i.customId === 'ButDisableReminderForYou') {
+                      WillNotPingArray.push(`${i.user}`);
 
-                    if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+                      console.log(`${i.user.username} wont be notified for this schedule!`);
 
-                    WillNotPingArray.push(`${i.user}`);
-
-                    console.log(`${i.user.username} wont be notified for this schedule!`);
-
-                    i.reply({
-                      embeds: [
-                        DisableReminderForYouEmbed
-                      ]
-                    });
-
-                  }
-
-                });
-
-                DisableReminderForEveryone.on('collect', async i => {
-
-                  if (i.customId === "ButDisableReminderForEveryone") {
-
-                    if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                    if (i.user.id !== interaction.member.user.id) {
                       i.reply({
-                        content: "You are not able to use this!",
                         embeds: [
-                          NotAbleToDeleteEmbed
+                          DisableReminderForYouEmbed
+                        ]
+                      });
+
+                    }
+
+                  });
+
+                  DisableReminderForEveryone.on('collect', async i => {
+
+                    if (i.customId === "ButDisableReminderForEveryone") {
+
+                      if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+                      if (i.user.id !== interaction.member.user.id) {
+                        i.reply({
+                          content: "You are not able to use this!",
+                          embeds: [
+                            NotAbleToDeleteEmbed
+                          ],
+                        })
+                        return;
+                      }
+
+                      console.log(`${i.user.username} has disabled the reminder for everyone!`);
+
+                      try {
+
+                        reminderschedule.stop();
+                        closereminders.stop();
+                        customreminder.stop();
+                        stopcustomreminder.stop();
+
+                      } catch (e) {
+
+                        i.reply("Something went wrong! Please try again! If this error doesn't go away, please contact the developer!");
+                        console.log(`Something went wrong! Error: ${e}`);
+                        return;
+
+                      }
+
+                      i.reply({
+                        embeds: [
+                          DisableReminderForEveryoneEmbed
                         ],
-                      })
-                      return;
+                      });
                     }
 
-                    console.log(`${i.user.username} has disabled the reminder for everyone!`);
+                  });
+                });
+                i.deferUpdate();
+              }
 
-                    try {
+              if (i.customId === "ButManageUpdates") {
 
-                      reminderschedule.stop();
-                      closereminders.stop();
-                      customreminder.stop();
-                      stopcustomreminder.stop();
+                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
 
-                    } catch (e) {
+                if (i.user.id !== interaction.member.user.id) {
+                  i.reply({
+                    content: "You are not able to use this!",
+                    embeds: [
+                      NotAbleToDeleteEmbed
+                    ]
+                  })
+                  return;
+                }
 
-                      i.reply("Something went wrong! Please try again! If this error doesn't go away, please contact the developer!");
-                      console.log(`Something went wrong! Error: ${e}`);
+                StatusUpdates = true;
+
+                console.log(`${i.user.username} has enabled the status updates!`);
+
+                i.reply({
+                  embeds: [
+                    EnableUpdateMessagesEmbed
+                  ]
+                });
+              }
+
+              if (i.customId === "ButPlayerLate") {
+
+                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+                i.channel.send({
+                  content: "\nAlright, please type the time at which you will be there (this will go in the description of the schedule). \nThe schedule will be updated when you type something or the message times out (2 minutes). \nPlease type the time in the following format: `HH:MM \n\nYou got 2 minutes until this message times out.`",
+                }).then(sentMessage => {
+
+                  const Filter = Check_User_Array.includes(i.user.id);
+
+                  const DelayCollector = sentMessage.channel.createMessageCollector({
+                    Filter, time: 120000, max: 1
+                  });
+
+                  let UserInput = ("");
+                  let TimeAuthor = ("");
+
+                  DelayCollector.on('collect', async m => {
+
+                    if (!m.content.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) { //Using this regex, we can check if the input follows the HH:MM format
+
+                      m.reply({
+                        content: "Please type the time in the following format: `HH:MM`",
+                      });
                       return;
 
                     }
 
-                    i.reply({
+                    m.react('✅');
+                    UserInput = m.content;
+                    TimeAuthor = `${m.author}`;
+
+                  });
+
+                  // eslint-disable-next-line no-unused-vars
+                  DelayCollector.on('end', collected => {
+
+                    if (HasBeenDeleted) return i.channel.send('Something went wrong. This schedule has already been deleted!');
+
+                    if (!UserInput) return;
+
+                    ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + FindArrayToUpdate(User_One_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Second_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Third_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fourth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fith_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Sixth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Seventh_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Eighth_Array, TimeAuthor, UserInput));
+                    ScheduleEmbed.setColor('DARK_NAVY');
+                    ScheduleEmbed.setFooter({
+                      text: `Created by ${interaction.member.user.username} | Latest change by ${i.user.username}`
+                    });
+                    ScheduleEmbed.setTimestamp();
+
+                    ScheduleMessage.edit({
                       embeds: [
-                        DisableReminderForEveryoneEmbed
+                        ScheduleEmbed
                       ],
                     });
-                  }
+
+                    i.channel.send(`Got it, the schedule should be updated in a few seconds -> Your time: **${UserInput ? UserInput : "Error when collecting [Error: 20]"}**`);
+
+                  });
+
+                  i.deferUpdate();
 
                 });
-              });
-              i.deferUpdate();
-            }
-
-            if (i.customId === "ButManageUpdates") {
-
-              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-              if (i.user.id !== interaction.member.user.id) {
-                i.reply({
-                  content: "You are not able to use this!",
-                  embeds: [
-                    NotAbleToDeleteEmbed
-                  ]
-                })
-                return;
               }
 
-              StatusUpdates = true;
-
-              console.log(`${i.user.username} has enabled the status updates!`);
-
-              i.reply({
-                embeds: [
-                  EnableUpdateMessagesEmbed
-                ]
-              });
-            }
-
-            if (i.customId === "ButPlayerLate") {
-
-              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-              i.channel.send({
-                content: "\nAlright, please type the time at which you will be there (this will go in the description of the schedule). \nThe schedule will be updated when you type something or the message times out (2 minutes). \nPlease type the time in the following format: `HH:MM \n\nYou got 2 minutes until this message times out.`",
-              }).then(sentMessage => {
-
-                const Filter = Check_User_Array.includes(i.user.id);
-
-                const DelayCollector = sentMessage.channel.createMessageCollector({
-                  Filter, time: 120000, max: 1
-                });
-
-                let UserInput = ("");
-                let TimeAuthor = ("");
-
-                DelayCollector.on('collect', async m => {
-
-                  if (!m.content.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) { //Using this regex, we can check if the input follows the HH:MM format
-
-                    m.reply({
-                      content: "Please type the time in the following format: `HH:MM`",
-                    });
-                    return;
-
-                  }
-
-                  m.react('✅');
-                  UserInput = m.content;
-                  TimeAuthor = `${m.author}`;
-
-                });
-
-                // eslint-disable-next-line no-unused-vars
-                DelayCollector.on('end', collected => {
-
-                  if (HasBeenDeleted) return i.channel.send('Something went wrong. This schedule has already been deleted!');
-
-                  if (!UserInput) return;
-
-                  ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + FindArrayToUpdate(User_One_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Second_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Third_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fourth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fith_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Sixth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Seventh_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Eighth_Array, TimeAuthor, UserInput));
-                  ScheduleEmbed.setColor('DARK_NAVY');
-                  ScheduleEmbed.setFooter({
-                    text: `Created by ${interaction.member.user.username} | Latest change by ${i.user.username}`
-                  });
-                  ScheduleEmbed.setTimestamp();
-
-                  ScheduleMessage.edit({
-                    embeds: [
-                      ScheduleEmbed
-                    ],
-                  });
-
-                  i.channel.send(`Got it, the schedule should be updated in a few seconds -> Your time: **${UserInput ? UserInput : "Error when collecting [Error: 20]"}**`);
-
-                });
-
-                i.deferUpdate();
-
-              });
-            }
+            });
 
           });
 
