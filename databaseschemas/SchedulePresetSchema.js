@@ -5,6 +5,11 @@ const requiredString = {
   required: true,
 };
 
+const nonRequiredString = {
+  type: String,
+  required: false,
+};
+
 const requiredNumber = {
   type: Number,
   required: true,
@@ -22,16 +27,16 @@ const SchedulePresetSchema = new mongoose.Schema({
   scheduleCreator: requiredString,
   scheduleCreatorID: requiredNumber,
   users: {
-    userOne: requiredString,
-    userTwo: requiredString,
-    userThree: requiredString,
-    userFour: requiredString,
-    userFive: requiredString,
-    userSix: requiredString,
-    userSeven: requiredString,
-    userEight: requiredString,
-    userNine: requiredString,
-    userTen: requiredString,
+    userOne: nonRequiredString,
+    userTwo: nonRequiredString,
+    userThree: nonRequiredString,
+    userFour: nonRequiredString,
+    userFive: nonRequiredString,
+    userSix: nonRequiredString,
+    userSeven: nonRequiredString,
+    userEight: nonRequiredString,
+    userNine: nonRequiredString,
+    userTen: nonRequiredString,
   },
 });
 

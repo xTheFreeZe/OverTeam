@@ -34,7 +34,6 @@ const CreateNewPreset = (presetData) => {
   newPreset.save().then(() => console.log('Saved new preset to database!')).catch((e) => {
 
     console.error(e);
-    //TODO: Fix bug that schedules can not be saved
 
   });
 
