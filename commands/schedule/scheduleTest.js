@@ -570,13 +570,7 @@ module.exports = {
 
           ReactionCollector.on('collect', i => {
 
-            console.log(i.customId);
-
-            const IgnoreButtons = new RegExp(`^(ButDelete)$`); //Ignore the buttons we don't need
-
-            if (IgnoreButtons.test(i.customId)) return;
-
-            const ValidButtons = new RegExp(`^(ButYes|ButNo|ButIdk)$`); //Check if the button is valid
+            if (i.customId == 'ButDelete') return; // if the button is the delete button, ignore it
 
             if (!Check_User_Array.includes(i.user.id)) {
               i.reply({
@@ -717,9 +711,11 @@ module.exports = {
                     embeds: [
                       NotAbleToDeleteEmbed
                     ],
+                    ephemeral: true
                   })
                   return;
                 }
+                ;
 
                 const presetData = {
                   name: `${interaction.channel.parent.name}`,
@@ -746,6 +742,7 @@ module.exports = {
                 CreateNewPreset(presetData);
 
               }
+              ;
 
               if (i.customId === "ButManageReminder") {
 
