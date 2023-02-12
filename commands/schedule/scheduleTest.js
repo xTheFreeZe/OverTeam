@@ -15,6 +15,7 @@ const timestamp = require('unix-timestamp');
 const {FindArrayToUpdate, CreateScheduleReminderMessage} = require('../../functions/functions.js');
 
 const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema.js');
+const CreateNewPreset = require('../../functions/Schedules/CreateNewPreset.js');
 
 //This code has been written by me, Marwin!
 
@@ -752,120 +753,32 @@ module.exports = {
                       return;
                     }
 
-                    if (!userOne || !userSecond || !userThird || !userFourth || !userFith) {
-                      i.reply({
-                        content: "Your schedule is not eligible for saving! It needs to fill out at least all 5 player slots!",
-                      });
-
-                      return;
-
-                    }
-
-                    let UserSixthString = ("");
-                    let UserSixthIDString = ("");
-                    let UserSeventhString = ("");
-                    let UserSeventhIDString = ("");
-                    let UserEighthString = ("");
-                    let UserEighthIDString = ("");
-
-                    if (userSixth) {
-
-                      UserSixthString = `${userSixth}`;
-                      UserSixthIDString = `${userSixth.user.id}`;
-
-                    } else {
-
-                      UserSixthString = "-";
-                      UserSixthIDString = "-";
-
-                    }
-
-                    if (userSeventh) {
-
-                      UserSeventhString = `${userSeventh}`;
-                      UserSeventhIDString = `${userSeventh.user.id}`;
-
-                    } else {
-
-                      UserSeventhString = "-";
-                      UserSeventhIDString = "-";
-                    }
-
-                    if (userEighth) {
-
-                      UserEighthString = `${userEighth}`;
-                      UserEighthIDString = `${userEighth.user.id}`;
-
-                    } else {
-
-                      UserEighthString = "-";
-                      UserEighthIDString = "-";
-                    }
-
-                    const NewScheduleData = {
-                      ScheduleCreator: `${interaction.member}`,
-                      ScheduleCreatorID: `${interaction.member.user.id}`,
-                      userOneJson: `${userOne}`,
-                      userOneIDJson: `${userOne.user.id}`,
-                      userSecondJson: `${userSecond}`,
-                      userSecondIDJson: `${userSecond.user.id}`,
-                      userThirdJson: `${userThird}`,
-                      userThirdIDJson: `${userThird.user.id}`,
-                      userFourthJson: `${userFourth}`,
-                      userFourthIDJson: `${userFourth.user.id}`,
-                      userFithJson: `${userFith}`,
-                      userFithIDJson: `${userFith.user.id}`,
-                      userSixthJson: `${UserSixthString}`,
-                      userSixthIDJson: `${UserSixthIDString}`,
-                      userSeventhJson: `${UserSeventhString}`,
-                      userSeventhIDJson: `${UserSeventhIDString}`,
-                      userEighthJson: `${UserEighthString}`,
-                      userEighthIDJson: `${UserEighthIDString}`,
-                      ScrimDescriptonJson: `${ScrimDescripton}`,
-                      InteractionChannelJson: `${interaction.channel}`
+                    const presetData = {
+                      name: `${interaction.channel.parent.name}`,
+                      creationChannel: `${interaction.channel.name}`,
+                      channelID: `${interaction.channel.id}`,
+                      creationDate: Date.now(),
+                      Description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
+                      scheduleCreator: `${interaction.member}`,
+                      scheduleCreatorID: `${interaction.member.id}`,
                     };
 
-                    let JSONuserMessage =
-                        `Hey there ${i.user.username} 👋` + "\n" +
-                        "You just saved this schedule:" + "\n" + "\n" +
-                        `Description: ${ScrimDescripton}` + "\n" +
-                        `First User: ${userOne}` + "\n" +
-                        `Second User: ${userSecond}` + "\n" +
-                        `Third User: ${userThird}` + "\n" +
-                        `Fourth User: ${userFourth}` + "\n" +
-                        `Fith User: ${userFith}` + "\n" +
-                        `Sixth User: ${UserSixthString}` + "\n" +
-                        `Seventh User: ${UserSeventhString}` + "\n" +
-                        `Eighth User: ${UserEighthString}` + "\n" + "\n" +
-                        `If you use /schedulepreset now, this will be your schedule!` + "\n" + "\n" +
-                        `🥰 Your 2ez Bot!` + "\n" + "\n" +
-                        `Your File: **Schedule_${interaction.channel.parent.name}.json**` + "\n" +
-                        `Access: **${interaction.channel.parent.name}** through **${interaction.member.user.username}**`;
+                    const playerData = {
+                      userOne: `${User_One_Array}`,
+                      userSecond: `${User_Second_Array}`,
+                      userThird: `${User_Third_Array}`,
+                      userFourth: `${User_Fourth_Array}`,
+                      userFith: `${User_Fith_Array}`,
+                      userSixth: `${User_Sixth_Array}`,
+                      userSeventh: `${User_Seventh_Array}`,
+                      userEighth: `${User_Eighth_Array}`,
+                      userNinth: `${User_Ninth_Array}`,
+                      userTenth: `${User_Tenth_Array}`,
+                    };
 
-                    fs.writeFile(`Schedule_${interaction.channel.parent.name}.json`, JSON.stringify(NewScheduleData, null, 2), async (err) => {
+                    CreateNewPreset(presetData, playerData);
 
-                      if (err) {
-
-                        i.reply(`Something didnt work! Check the error for more info: ${err}`);
-                        console.log(err);
-
-                      } else {
-
-                        await i.reply({
-                          content: `Your data has been saved successfully. Your file: **${interaction.channel.parent.name}.json**.`,
-                        });
-                        console.log(`Saved Schedule Data in: Schedule_${interaction.channel.parent.name}.json`);
-
-                        i.channel.send(JSONuserMessage).catch((e) => {
-
-                          console.log(`Couldnt send the message! Error: ${e}`);
-
-                        });
-                      }
-
-                    });
-
-                  }//here
+                  }
 
                   if (i.customId === "ButManageReminder") {
 
