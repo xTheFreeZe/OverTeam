@@ -718,6 +718,7 @@ module.exports = {
                 ;
 
                 const presetData = {
+                  _id: `${interaction.channel.parent.id}`,
                   name: `${interaction.channel.parent.name}`,
                   creationChannel: `${interaction.channel.name}`,
                   channelID: `${interaction.channel.id}`,
@@ -739,21 +740,41 @@ module.exports = {
                   },
                 };
 
-                const Response = CreateNewPreset(presetData);
+                CreateNewPreset(presetData).then(res => {
 
-                if (Response) {
+                  const Repsone = res;
 
-                  i.reply({
-                    content: 'Schedule saved!'
-                  });
+                  console.log('Repsonse', Response);
 
-                } else {
+                  const SavedEmbed = new MessageEmbed()
+                      .setTitle('Schedule saved!')
+                      .setDescription(`You can now use the command \`/preset\` to use your saved schedule!`)
+                      .setColor('GREEN');
 
-                  i.reply({
-                    content: 'Something went wrong!'
-                  });
+                  const ErrorEmbed = new MessageEmbed()
+                      .setTitle('Something went wrong!')
+                      .setDescription(`Something went wrong while saving your schedule! Please try again later!`)
+                      .setColor('RED');
 
-                }
+                  if (Response) {
+
+                    i.reply({
+                      embeds: [
+                        SavedEmbed
+                      ],
+                    });
+
+                  } else {
+
+                    i.reply({
+                      embeds: [
+                        ErrorEmbed
+                      ],
+                    });
+
+                  }
+
+                });
 
               }
 

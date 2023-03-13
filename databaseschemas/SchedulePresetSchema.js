@@ -16,6 +16,7 @@ const requiredNumber = {
 }
 
 const SchedulePresetSchema = new mongoose.Schema({
+  _id: requiredNumber,
   name: requiredString,
   creationChannel: requiredString,
   channelID: requiredNumber,

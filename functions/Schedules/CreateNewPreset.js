@@ -12,6 +12,7 @@ const CreateNewPreset = (presetData) => {
   try {
 
     const newPreset = new SchedulePresetSchema({
+      _id: presetData._id,
       name: presetData.name,
       creationChannel: presetData.creationChannel,
       channelID: presetData.channelID,
@@ -33,20 +34,49 @@ const CreateNewPreset = (presetData) => {
       },
     });
 
-    newPreset.save().then(() => console.log('Saved new preset to database!')).catch((e) => {
+    //Check if the _id already exists
+    SchedulePresetSchema.findOne({_id: presetData._id}, (err, doc) => {
 
-      console.error(e);
+      if (err) {
+
+        console.error(err);
+        return false;
+
+      } else if (doc) {
+
+        console.log('Preset already exists in database!');
+
+        const filter = {
+          "_id": presetData._id
+        };
+
+        SchedulePresetSchema.findOneAndUpdate(filter, newPreset).catch((e) => {
+
+          console.error(e);
+          return false;
+        });
+
+        return true;
+
+      } else {
+
+        console.log('Preset does not exist in database!');
+        newPreset.save().then(() => console.log('Saved new preset to database!')).catch((e) => {
+
+          console.error(e);
+          return false;
+
+        });
+
+        return true;
+
+      }
 
     });
+
   } catch (e) {
 
-    console.error(e);
-    return false;
-
-  } finally {
-
-    // eslint-disable-next-line no-unsafe-finally
-    return true;
+    return console.error(e);
 
   }
 
