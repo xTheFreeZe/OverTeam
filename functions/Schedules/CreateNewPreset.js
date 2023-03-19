@@ -1,11 +1,13 @@
 const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema.js');
+const {MessageEmbed} = require("discord.js");
 
 /**
  * Create a new schedule preset. This will be saved to the database.
  * @param presetData
+ * @param channel
  * @constructor
  */
-const CreateNewPreset = (presetData) => {
+const CreateNewPreset = (presetData, channel) => {
 
   console.log(presetData);
 
@@ -40,7 +42,6 @@ const CreateNewPreset = (presetData) => {
       if (err) {
 
         console.error(err);
-        return false;
 
       } else if (doc) {
 
@@ -53,10 +54,8 @@ const CreateNewPreset = (presetData) => {
         SchedulePresetSchema.findOneAndUpdate(filter, newPreset).catch((e) => {
 
           console.error(e);
-          return false;
-        });
 
-        return true;
+        });
 
       } else {
 
@@ -64,11 +63,8 @@ const CreateNewPreset = (presetData) => {
         newPreset.save().then(() => console.log('Saved new preset to database!')).catch((e) => {
 
           console.error(e);
-          return false;
 
         });
-
-        return true;
 
       }
 
@@ -76,7 +72,16 @@ const CreateNewPreset = (presetData) => {
 
   } catch (e) {
 
-    return console.error(e);
+    const ErrorEmbed = new MessageEmbed()
+        .setTitle('Something went wrong!')
+        .setDescription(`Something went wrong while saving your schedule! Please try again later!`)
+        .setColor('RED');
+
+    console.error(e);
+
+    return channel.send({
+      embeds: [ErrorEmbed],
+    });
 
   }
 

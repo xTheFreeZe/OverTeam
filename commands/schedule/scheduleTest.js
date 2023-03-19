@@ -740,40 +740,17 @@ module.exports = {
                   },
                 };
 
-                CreateNewPreset(presetData).then(res => {
+                CreateNewPreset(presetData, i.channel); //Create new preset
 
-                  const Repsone = res;
+                const SavedEmbed = new MessageEmbed()
+                    .setTitle('Schedule saved!')
+                    .setDescription(`You can now use the command \`/preset\` to use your saved schedule!`)
+                    .setColor('GREEN');
 
-                  console.log('Repsonse', Response);
-
-                  const SavedEmbed = new MessageEmbed()
-                      .setTitle('Schedule saved!')
-                      .setDescription(`You can now use the command \`/preset\` to use your saved schedule!`)
-                      .setColor('GREEN');
-
-                  const ErrorEmbed = new MessageEmbed()
-                      .setTitle('Something went wrong!')
-                      .setDescription(`Something went wrong while saving your schedule! Please try again later!`)
-                      .setColor('RED');
-
-                  if (Response) {
-
-                    i.reply({
-                      embeds: [
-                        SavedEmbed
-                      ],
-                    });
-
-                  } else {
-
-                    i.reply({
-                      embeds: [
-                        ErrorEmbed
-                      ],
-                    });
-
-                  }
-
+                i.reply({
+                  embeds: [
+                    SavedEmbed
+                  ]
                 });
 
               }
