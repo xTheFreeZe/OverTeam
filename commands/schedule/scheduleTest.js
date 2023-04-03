@@ -1,3 +1,5 @@
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 const {
   SlashCommandBuilder
 } = require('@discordjs/builders');
@@ -8,11 +10,10 @@ const {
   MessageEmbed
 } = require('discord.js');
 
-const fs = require('fs');
 const nodeCron = require('node-cron');
 const timestamp = require('unix-timestamp');
 
-const {FindArrayToUpdate, CreateScheduleReminderMessage} = require('../../functions/functions.js');
+const { FindArrayToUpdate, CreateScheduleReminderMessage } = require('../../functions/functions.js');
 
 const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema.js');
 const CreateNewPreset = require('../../functions/Schedules/CreateNewPreset.js');
@@ -21,35 +22,35 @@ const CreateNewPreset = require('../../functions/Schedules/CreateNewPreset.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
-      .setName('schedule-test')
+    .setName('schedule-test')
 
-      .setDescription('Create a Team schedule! This allows you to mention 8 people!')
+    .setDescription('Create a Team schedule! This allows you to mention 8 people!')
 
-      .addUserOption(option => option.setName('user-one').setDescription('Add a user to mention in the schedule!').setRequired(true))
+    .addUserOption(option => option.setName('user-one').setDescription('Add a user to mention in the schedule!').setRequired(true))
 
-      .addUserOption(option => option.setName('user-second').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-second').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-third').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-third').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-fourth').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-fourth').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-fith').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-fith').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-sixth').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-sixth').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-seventh').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-seventh').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-eighth').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-eighth').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-nine').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-nine').setDescription('Add a user to mention in the schedule!'))
 
-      .addUserOption(option => option.setName('user-ten').setDescription('Add a user to mention in the schedule!'))
+    .addUserOption(option => option.setName('user-ten').setDescription('Add a user to mention in the schedule!'))
 
-      .addNumberOption(option => option.setName('scrim-time').setDescription('Time for the little timestamp inside of your schedule. If you scrim at 19 CET, write 19'))
+    .addNumberOption(option => option.setName('scrim-time').setDescription('Time for the little timestamp inside of your schedule. If you scrim at 19 CET, write 19'))
 
-      .addNumberOption(option => option.setName('reminder-date').setDescription('The date of the day you want to be reminded at!'))
+    .addNumberOption(option => option.setName('reminder-date').setDescription('The date of the day you want to be reminded at!'))
 
-      .addStringOption(option => option.setName('description').setDescription('This will be the description of your schedule!')),
+    .addStringOption(option => option.setName('description').setDescription('This will be the description of your schedule!')),
 
   async execute(interaction) {
 
@@ -95,8 +96,6 @@ module.exports = {
     let ScrimDescripton = [];
 
     let MentionMessage = [];
-
-    const PresetSchedulePath = `./Schedule_${interaction.channel.parent.name}.json`;
 
     /**
      * This is the boolean used for status updates. If true, the author of the schedule will recieve updates everytime someone reacted!
@@ -170,7 +169,6 @@ module.exports = {
 
     var closereminders = nodeCron.schedule(`47 18 * * *`, () => { //47 17 * * * This cron schedule deletes the reminders after the scrim has ended so it's not sent twice.
       reminderschedule.stop();
-      remindercreator.stop();
     }, {
       scheduled: false
     });
@@ -433,7 +431,7 @@ module.exports = {
 
     // ⬇ Description of the embed
     let UserMessages =
-        (`> ${ScrimDescripton.toString().replace(/,/g, '')}
+      (`> ${ScrimDescripton.toString().replace(/,/g, '')}
 
       ⏰ <t:${timestamp.fromDate(event)}:R>
 
@@ -460,505 +458,250 @@ module.exports = {
     let team = `${interaction.channel.parent.name}`; // get category name
 
     const ScheduleEmbed = new MessageEmbed()
-        .setTitle(`${team}'s Schedule`)
-        .setDescription(UserMessages)
-        .setColor('GREYPLE')
-        .setFooter({
-          text: `Created by ${interaction.member.user.username}`
-        })
-        .setTimestamp();
+      .setTitle(`${team}'s Schedule`)
+      .setDescription(UserMessages)
+      .setColor('GREYPLE')
+      .setFooter({
+        text: `Created by ${interaction.member.user.username}`
+      })
+      .setTimestamp();
 
     const NotAbleToReactEmbed = new MessageEmbed()
-        .setDescription(`> Your User ID doesn't appear in the following Array: SCHEDULE_USER_ID_ARRAY `)
-        .setColor('DARK_BUT_NOT_BLACK')
+      .setDescription(`> Your User ID doesn't appear in the following Array: SCHEDULE_USER_ID_ARRAY `)
+      .setColor('DARK_BUT_NOT_BLACK')
 
     const NotAbleToDeleteEmbed = new MessageEmbed()
-        .setDescription(`> Only the creator of this schedule , ${interaction.member.user.username}, can use this!`)
-        .setColor('DARK_BUT_NOT_BLACK')
+      .setDescription(`> Only the creator of this schedule , ${interaction.member.user.username}, can use this!`)
+      .setColor('DARK_BUT_NOT_BLACK')
 
     const DisableReminderForEveryoneEmbed = new MessageEmbed()
-        .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I won't send a reminder for this schedule!`)
-        .setColor('GREEN');
+      .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I won't send a reminder for this schedule!`)
+      .setColor('GREEN');
 
     const DisableReminderForYouEmbed = new MessageEmbed()
-        .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I won't ping you for this schedule!`)
-        .setColor('GREEN');
+      .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I won't ping you for this schedule!`)
+      .setColor('GREEN');
 
     const EnableUpdateMessagesEmbed = new MessageEmbed()
-        .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I will send you a message every time someone changes their availability!`)
-        .setColor('GREEN');
+      .setDescription(`<:2ez_Schedule_Yes:933802728130494524> I will send you a message every time someone changes their availability!`)
+      .setColor('GREEN');
 
     const SuccessfullyDeletedEmbed = new MessageEmbed()
-        .setDescription(`<:2ez_Schedule_Yes:933802728130494524> Your schedule has been deleted!`)
-        .setFooter({
-          text: "All running reminders have been stopped!"
-        })
-        .setColor('GREEN');
+      .setDescription(`<:2ez_Schedule_Yes:933802728130494524> Your schedule has been deleted!`)
+      .setFooter({
+        text: "All running reminders have been stopped!"
+      })
+      .setColor('GREEN');
 
     const Buttons = new MessageActionRow()
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButYes')
-                .setEmoji('<:OverTeam_Yes:1074131419535777884>')
-                .setStyle('SECONDARY'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButNo')
-                .setEmoji('<:OverTeam_No:1074131594593452134>')
-                .setStyle('SECONDARY'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButIdk')
-                .setEmoji('<:OverTeam_Tentative:1074131651132666017>')
-                .setStyle('SECONDARY'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButDelete')
-                .setLabel('Delete')
-                .setStyle("DANGER")
-        );
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButYes')
+          .setEmoji('<:OverTeam_Yes:1074131419535777884>')
+          .setStyle('SECONDARY'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButNo')
+          .setEmoji('<:OverTeam_No:1074131594593452134>')
+          .setStyle('SECONDARY'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButIdk')
+          .setEmoji('<:OverTeam_Tentative:1074131651132666017>')
+          .setStyle('SECONDARY'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButDelete')
+          .setLabel('Delete')
+          .setStyle("DANGER")
+      );
 
     const Options = new MessageActionRow()
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButSave')
-                .setLabel('Save this schedule')
-                .setStyle('SUCCESS'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButPlayerLate')
-                .setLabel("I'll be late")
-                .setStyle('DANGER'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButManageReminder')
-                .setLabel('Manage reminder')
-                .setStyle('DANGER'),
-        )
-        .addComponents(
-            new MessageButton()
-                .setCustomId('ButManageUpdates')
-                .setLabel('Turn on status updates')
-                .setStyle('PRIMARY'),
-        );
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButSave')
+          .setLabel('Save this schedule')
+          .setStyle('SUCCESS'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButPlayerLate')
+          .setLabel("I'll be late")
+          .setStyle('DANGER'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButManageReminder')
+          .setLabel('Manage reminder')
+          .setStyle('DANGER'),
+      )
+      .addComponents(
+        new MessageButton()
+          .setCustomId('ButManageUpdates')
+          .setLabel('Turn on status updates')
+          .setStyle('PRIMARY'),
+      );
 
     await interaction.reply(`Here is your schedule for the following users: ${MentionMessage}`).then(
-        interaction.channel.send({
-          embeds: [
-            ScheduleEmbed
-          ],
-          components: [
-            Buttons
-          ]
+      interaction.channel.send({
+        embeds: [
+          ScheduleEmbed
+        ],
+        components: [
+          Buttons
+        ]
 
+      }).then(sentMessage => {
+
+        const ScheduleMessage = sentMessage;
+
+        const ReactionCollector = sentMessage.createMessageComponentCollector({
+          componentType: 'BUTTON'
+        });
+
+        const DeleteCollector = sentMessage.createMessageComponentCollector({
+          componentType: 'BUTTON'
+        });
+
+        ReactionCollector.on('collect', i => {
+
+          if (i.customId == 'ButDelete') return; // if the button is the delete button, ignore it
+
+          if (!Check_User_Array.includes(i.user.id)) {
+            i.reply({
+              content: "You are not able to react here!",
+              embeds: [
+                NotAbleToReactEmbed
+              ],
+              ephemeral: true
+            })
+            return;
+          }
+
+          let EmojiReaction = ('');
+          let EmbedColor = ('');
+
+          if (i.customId.toString().includes('ButYes')) {
+            EmojiReaction = `${yesEmoji}`;
+            EmbedColor = 'GREEN';
+          } else if (i.customId.toString().includes("ButNo")) {
+            EmojiReaction = `${noEmoji}`;
+            EmbedColor = 'RED';
+          } else if (i.customId.toString().includes("ButIdk")) {
+            EmojiReaction = `${tentativeEmoji}`;
+            EmbedColor = 'BLURPLE';
+          }
+
+          AllUsersWithEmojis.length = 0;
+
+          try {
+
+            if (i.member.user.id == userOne.user.id) {
+
+              User_One_Array.pop();
+              User_One_Array.push(`${EmojiReaction} ${userOne}`)
+
+            }
+
+            if (i.member.user.id == userSecond.user.id) {
+
+              User_Second_Array.pop();
+              User_Second_Array.push(`${EmojiReaction} ${userSecond}`)
+
+            }
+
+            if (i.member.user.id == userThird.user.id) {
+
+              User_Third_Array.pop();
+              User_Third_Array.push(`${EmojiReaction} ${userThird}`)
+
+            }
+
+            if (i.user.id == userFourth.user.id) {
+
+              User_Fourth_Array.pop();
+              User_Fourth_Array.push(`${EmojiReaction} ${userFourth}`)
+
+            }
+
+            if (i.user.id == userFith.user.id) {
+
+              User_Fith_Array.pop();
+              User_Fith_Array.push(`${EmojiReaction} ${userFith}`)
+
+            }
+
+            if (i.user.id == userSixth.user.id) {
+
+              User_Sixth_Array.pop();
+              User_Sixth_Array.push(`${EmojiReaction} ${userSixth}`)
+
+            }
+
+            if (i.user.id == userSeventh.user.id) {
+
+              User_Seventh_Array.pop();
+              User_Seventh_Array.push(`${EmojiReaction} ${userSeventh}`)
+
+            }
+
+            if (i.user.id == userEighth.user.id) {
+
+              User_Eighth_Array.pop();
+              User_Eighth_Array.push(`${EmojiReaction} ${userEighth}`)
+
+            }
+
+            // eslint-disable-next-line no-empty
+          } catch {
+
+          }
+
+          AllUsersWithEmojis.push(User_One_Array.toString(), User_Second_Array.toString(), User_Third_Array.toString(), User_Fourth_Array.toString(), User_Fith_Array.toString(), User_Sixth_Array.toString(), User_Seventh_Array.toString(), User_Eighth_Array.toString(), User_Ninth_Array.toString(), User_Tenth_Array.toString());
+
+          if (StatusUpdates) {
+
+            interaction.member.send(`${i.member.user.username} reacted with ${EmojiReaction} to your schedule in ${interaction.channel}!`).catch(err => {
+              console.log('Was not able to send status update', err);
+            });
+
+          }
+
+          ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + User_One_Array.toString() + "\n" + "\n" + User_Second_Array.toString() + "\n" + "\n" + User_Third_Array.toString() + "\n" + "\n" + User_Fourth_Array.toString() + "\n" + "\n" + User_Fith_Array.toString() + "\n" + "\n" + User_Sixth_Array.toString() + "\n" + "\n" + User_Seventh_Array.toString() + "\n" + "\n" + User_Eighth_Array.toString() + "\n" + "\n" + User_Ninth_Array.toString() + "\n" + "\n" + User_Tenth_Array.toString());
+          ScheduleEmbed.setColor(EmbedColor);
+          ScheduleEmbed.setFooter({
+            text: `Created by ${interaction.member.user.username} | Latest reaction by ${i.user.username}`
+          });
+          ScheduleEmbed.setTimestamp();
+
+          sentMessage.edit({
+            embeds: [
+              ScheduleEmbed
+            ],
+          });
+          i.deferUpdate();
+
+        });
+
+        interaction.channel.send({
+          content: 'Schedule options',
+          components: [
+            Options
+          ],
         }).then(sentMessage => {
 
-          const ScheduleMessage = sentMessage;
-
-          const ReactionCollector = sentMessage.createMessageComponentCollector({
+          const OptionCollector = sentMessage.createMessageComponentCollector({
             componentType: 'BUTTON'
           });
 
-          const DeleteCollector = sentMessage.createMessageComponentCollector({
-            componentType: 'BUTTON'
-          });
+          OptionCollector.on('collect', i => {
 
-          ReactionCollector.on('collect', i => {
+            if (i.customId === "ButSave") {
 
-            if (i.customId == 'ButDelete') return; // if the button is the delete button, ignore it
-
-            if (!Check_User_Array.includes(i.user.id)) {
-              i.reply({
-                content: "You are not able to react here!",
-                embeds: [
-                  NotAbleToReactEmbed
-                ],
-                ephemeral: true
-              })
-              return;
-            }
-
-            let EmojiReaction = ('');
-            let EmbedColor = ('');
-
-            if (i.customId.toString().includes('ButYes')) {
-              EmojiReaction = `${yesEmoji}`;
-              EmbedColor = 'GREEN';
-            } else if (i.customId.toString().includes("ButNo")) {
-              EmojiReaction = `${noEmoji}`;
-              EmbedColor = 'RED';
-            } else if (i.customId.toString().includes("ButIdk")) {
-              EmojiReaction = `${tentativeEmoji}`;
-              EmbedColor = 'BLURPLE';
-            }
-
-            AllUsersWithEmojis.length = 0;
-
-            try {
-
-              if (i.member.user.id == userOne.user.id) {
-
-                User_One_Array.pop();
-                User_One_Array.push(`${EmojiReaction} ${userOne}`)
-
-              }
-
-              if (i.member.user.id == userSecond.user.id) {
-
-                User_Second_Array.pop();
-                User_Second_Array.push(`${EmojiReaction} ${userSecond}`)
-
-              }
-
-              if (i.member.user.id == userThird.user.id) {
-
-                User_Third_Array.pop();
-                User_Third_Array.push(`${EmojiReaction} ${userThird}`)
-
-              }
-
-              if (i.user.id == userFourth.user.id) {
-
-                User_Fourth_Array.pop();
-                User_Fourth_Array.push(`${EmojiReaction} ${userFourth}`)
-
-              }
-
-              if (i.user.id == userFith.user.id) {
-
-                User_Fith_Array.pop();
-                User_Fith_Array.push(`${EmojiReaction} ${userFith}`)
-
-              }
-
-              if (i.user.id == userSixth.user.id) {
-
-                User_Sixth_Array.pop();
-                User_Sixth_Array.push(`${EmojiReaction} ${userSixth}`)
-
-              }
-
-              if (i.user.id == userSeventh.user.id) {
-
-                User_Seventh_Array.pop();
-                User_Seventh_Array.push(`${EmojiReaction} ${userSeventh}`)
-
-              }
-
-              if (i.user.id == userEighth.user.id) {
-
-                User_Eighth_Array.pop();
-                User_Eighth_Array.push(`${EmojiReaction} ${userEighth}`)
-
-              }
-
-              // eslint-disable-next-line no-empty
-            } catch {
-
-            }
-
-            AllUsersWithEmojis.push(User_One_Array.toString(), User_Second_Array.toString(), User_Third_Array.toString(), User_Fourth_Array.toString(), User_Fith_Array.toString(), User_Sixth_Array.toString(), User_Seventh_Array.toString(), User_Eighth_Array.toString(), User_Ninth_Array.toString(), User_Tenth_Array.toString());
-
-            if (StatusUpdates) {
-
-              interaction.member.send(`${i.member.user.username} reacted with ${EmojiReaction} to your schedule in ${interaction.channel}!`).catch(err => {
-                console.log('Was not able to send status update', err);
-              });
-
-            }
-
-            ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + User_One_Array.toString() + "\n" + "\n" + User_Second_Array.toString() + "\n" + "\n" + User_Third_Array.toString() + "\n" + "\n" + User_Fourth_Array.toString() + "\n" + "\n" + User_Fith_Array.toString() + "\n" + "\n" + User_Sixth_Array.toString() + "\n" + "\n" + User_Seventh_Array.toString() + "\n" + "\n" + User_Eighth_Array.toString() + "\n" + "\n" + User_Ninth_Array.toString() + "\n" + "\n" + User_Tenth_Array.toString());
-            ScheduleEmbed.setColor(EmbedColor);
-            ScheduleEmbed.setFooter({
-              text: `Created by ${interaction.member.user.username} | Latest reaction by ${i.user.username}`
-            });
-            ScheduleEmbed.setTimestamp();
-
-            sentMessage.edit({
-              embeds: [
-                ScheduleEmbed
-              ],
-            });
-            i.deferUpdate();
-
-          });
-
-          interaction.channel.send({
-            content: 'Schedule options',
-            components: [
-              Options
-            ],
-          }).then(sentMessage => {
-
-            const OptionCollector = sentMessage.createMessageComponentCollector({
-              componentType: 'BUTTON'
-            });
-
-            OptionCollector.on('collect', i => {
-
-              if (i.customId === "ButSave") {
-
-                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                if (i.user.id !== interaction.member.user.id) {
-                  i.reply({
-                    content: "You are not able to use this!",
-                    embeds: [
-                      NotAbleToDeleteEmbed
-                    ],
-                    ephemeral: true
-                  })
-                  return;
-                }
-                ;
-
-                const presetData = {
-                  _id: `${interaction.channel.parent.id}`,
-                  name: `${interaction.channel.parent.name}`,
-                  creationChannel: `${interaction.channel.name}`,
-                  channelID: `${interaction.channel.id}`,
-                  creationDate: `${Date.now()}`,
-                  description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
-                  scheduleCreator: `${interaction.member}`,
-                  scheduleCreatorID: `${interaction.member.id}`,
-                  users: {
-                    userOne: `${userOne}`,
-                    userSecond: `${userSecond ? userSecond : '-'}`,
-                    userThird: `${userThird ? userThird : '-'}`,
-                    userFourth: `${userFourth ? userFourth : '-'}`,
-                    userFifth: `${userFith ? userFith : '-'}`,
-                    userSixth: `${userSixth ? userSixth : '-'}`,
-                    userSeventh: `${userSeventh ? userSeventh : '-'}`,
-                    userEighth: `${userEighth ? userEighth : '-'}`,
-                    userNinth: `${userNinth ? userNinth : '-'}`,
-                    userTenth: `${userTenth ? userTenth : '-'}`,
-                  },
-                };
-
-                CreateNewPreset(presetData, i.channel); //Create new preset
-
-                const SavedEmbed = new MessageEmbed()
-                    .setTitle('Schedule saved!')
-                    .setDescription(`You can now use the command \`/preset\` to use your saved schedule!`)
-                    .setColor('GREEN');
-
-                i.reply({
-                  embeds: [
-                    SavedEmbed
-                  ]
-                });
-
-              }
-
-              if (i.customId === "ButManageReminder") {
-
-                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                if (!Check_User_Array.includes(i.user.id)) {
-                  i.reply({
-                    content: "You are not able to use this!",
-                    embeds: [
-                      NotAbleToReactEmbed
-                    ],
-                    ephemeral: true
-                  })
-                  return;
-                }
-
-                const ReminderOptions = new MessageActionRow()
-                    .addComponents(
-                        new MessageButton()
-                            .setCustomId('ButDisableReminderForYou')
-                            .setLabel('Disable for you')
-                            .setStyle('DANGER'),
-                    )
-                    .addComponents(
-                        new MessageButton()
-                            .setCustomId('ButDisableReminderForEveryone')
-                            .setLabel('Disable for everyone')
-                            .setStyle('DANGER'),
-                    );
-
-                i.channel.send({
-                  content: "What do you want to do?",
-                  components: [
-                    ReminderOptions
-                  ],
-                }).then(sentMessage => {
-
-                  const DisableReminderForYou = sentMessage.createMessageComponentCollector({
-                    componentType: 'BUTTON'
-                  });
-
-                  const DisableReminderForEveryone = sentMessage.createMessageComponentCollector({
-                    componentType: 'BUTTON'
-                  });
-
-                  DisableReminderForYou.on('collect', async i => {
-
-                    if (i.customId === 'ButDisableReminderForYou') {
-
-                      if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                      WillNotPingArray.push(`${i.user}`);
-
-                      console.log(`${i.user.username} wont be notified for this schedule!`);
-
-                      i.reply({
-                        embeds: [
-                          DisableReminderForYouEmbed
-                        ]
-                      });
-
-                    }
-
-                  });
-
-                  DisableReminderForEveryone.on('collect', async i => {
-
-                    if (i.customId === "ButDisableReminderForEveryone") {
-
-                      if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                      if (i.user.id !== interaction.member.user.id) {
-                        i.reply({
-                          content: "You are not able to use this!",
-                          embeds: [
-                            NotAbleToDeleteEmbed
-                          ],
-                        })
-                        return;
-                      }
-
-                      console.log(`${i.user.username} has disabled the reminder for everyone!`);
-
-                      try {
-
-                        reminderschedule.stop();
-                        closereminders.stop();
-                        customreminder.stop();
-                        stopcustomreminder.stop();
-
-                      } catch (e) {
-
-                        i.reply("Something went wrong! Please try again! If this error doesn't go away, please contact the developer!");
-                        console.log(`Something went wrong! Error: ${e}`);
-                        return;
-
-                      }
-
-                      i.reply({
-                        embeds: [
-                          DisableReminderForEveryoneEmbed
-                        ],
-                      });
-                    }
-
-                  });
-                });
-                i.deferUpdate();
-              }
-
-              if (i.customId === "ButManageUpdates") {
-
-                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                if (i.user.id !== interaction.member.user.id) {
-                  i.reply({
-                    content: "You are not able to use this!",
-                    embeds: [
-                      NotAbleToDeleteEmbed
-                    ]
-                  })
-                  return;
-                }
-
-                StatusUpdates = true;
-
-                console.log(`${i.user.username} has enabled the status updates!`);
-
-                i.reply({
-                  embeds: [
-                    EnableUpdateMessagesEmbed
-                  ]
-                });
-              }
-
-              if (i.customId === "ButPlayerLate") {
-
-                if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
-
-                i.channel.send({
-                  content: "\nAlright, please type the time at which you will be there (this will go in the description of the schedule). \nThe schedule will be updated when you type something or the message times out (2 minutes). \nPlease type the time in the following format: `HH:MM \n\nYou got 2 minutes until this message times out.`",
-                }).then(sentMessage => {
-
-                  const Filter = Check_User_Array.includes(i.user.id);
-
-                  const DelayCollector = sentMessage.channel.createMessageCollector({
-                    Filter, time: 120000, max: 1
-                  });
-
-                  let UserInput = ("");
-                  let TimeAuthor = ("");
-
-                  DelayCollector.on('collect', async m => {
-
-                    if (!m.content.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) { //Using this regex, we can check if the input follows the HH:MM format
-
-                      m.reply({
-                        content: "Please type the time in the following format: `HH:MM`",
-                      });
-                      return;
-
-                    }
-
-                    m.react('✅');
-                    UserInput = m.content;
-                    TimeAuthor = `${m.author}`;
-
-                  });
-
-                  // eslint-disable-next-line no-unused-vars
-                  DelayCollector.on('end', collected => {
-
-                    if (HasBeenDeleted) return i.channel.send('Something went wrong. This schedule has already been deleted!');
-
-                    if (!UserInput) return;
-
-                    ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + FindArrayToUpdate(User_One_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Second_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Third_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fourth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fith_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Sixth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Seventh_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Eighth_Array, TimeAuthor, UserInput));
-                    ScheduleEmbed.setColor('DARK_NAVY');
-                    ScheduleEmbed.setFooter({
-                      text: `Created by ${interaction.member.user.username} | Latest change by ${i.user.username}`
-                    });
-                    ScheduleEmbed.setTimestamp();
-
-                    ScheduleMessage.edit({
-                      embeds: [
-                        ScheduleEmbed
-                      ],
-                    });
-
-                    i.channel.send(`Got it, the schedule should be updated in a few seconds -> Your time: **${UserInput ? UserInput : "Error when collecting [Error: 20]"}**`);
-
-                  });
-
-                  i.deferUpdate();
-
-                });
-              }
-
-            });
-
-          });
-
-          DeleteCollector.on('collect', async (i) => {
-
-            if (i.customId === "ButDelete") {
+              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
 
               if (i.user.id !== interaction.member.user.id) {
                 i.reply({
@@ -971,81 +714,336 @@ module.exports = {
                 return;
               }
 
-              try {
 
-                User_One_Array.pop();
+              const presetData = {
+                _id: `${interaction.channel.parent.id}`,
+                name: `${interaction.channel.parent.name}`,
+                creationChannel: `${interaction.channel.name}`,
+                channelID: `${interaction.channel.id}`,
+                creationDate: `${Date.now()}`,
+                description: `${ScrimDescripton.toString().replace(/,/g, '')}`,
+                scheduleCreator: `${interaction.member}`,
+                scheduleCreatorID: `${interaction.member.id}`,
+                users: {
+                  userOne: `${userOne}`,
+                  userSecond: `${userSecond ? userSecond : '-'}`,
+                  userThird: `${userThird ? userThird : '-'}`,
+                  userFourth: `${userFourth ? userFourth : '-'}`,
+                  userFifth: `${userFith ? userFith : '-'}`,
+                  userSixth: `${userSixth ? userSixth : '-'}`,
+                  userSeventh: `${userSeventh ? userSeventh : '-'}`,
+                  userEighth: `${userEighth ? userEighth : '-'}`,
+                  userNinth: `${userNinth ? userNinth : '-'}`,
+                  userTenth: `${userTenth ? userTenth : '-'}`,
+                },
+              };
 
-                User_Second_Array.pop();
+              CreateNewPreset(presetData, i.channel); //Create new preset
 
-                User_Third_Array.pop();
-
-                User_Fourth_Array.pop();
-
-                User_Fith_Array.pop();
-
-                User_Sixth_Array.pop();
-
-                User_Seventh_Array.pop();
-
-                User_Eighth_Array.pop();
-
-                User_Ninth_Array.pop();
-
-                User_Tenth_Array.pop();
-
-                ScrimDescripton.pop();
-
-                MentionMessage.pop();
-
-                closereminders.stop();
-
-                reminderschedule.stop();
-
-                customreminder.stop();
-
-                stopcustomreminder.stop();
-
-              } catch {
-
-                const embed = new MessageEmbed()
-                    .setDescription('Error ID: `BAD_ARRAY_POP / 9 ` Contact the Dev if you see this!')
-                    .setColor('RED');
-
-                i.reply({
-                  content: 'Something went wrong...!',
-                  embeds: [
-                    embed
-                  ],
-                  ephemeral: true
-                });
-                return;
-              }
-
-              HasBeenDeleted = true;
-
-              sentMessage.delete().catch(() => {
-
-                console.log('Error ID: 10');
-
-              });
-
-              interaction.deleteReply().catch(() => {
-
-                console.log('Error ID: 11 | Interaction could not be deleted!');
-
-              });
-
-              console.log(`Schedule in ${interaction.channel.parent.name} got deleted!`);
+              const SavedEmbed = new MessageEmbed()
+                .setTitle('Schedule saved!')
+                .setDescription(`You can now use the command \`/preset\` to use your saved schedule!`)
+                .setColor('GREEN');
 
               i.reply({
                 embeds: [
-                  SuccessfullyDeletedEmbed
+                  SavedEmbed
+                ]
+              });
+
+            }
+
+            if (i.customId === "ButManageReminder") {
+
+              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+              if (!Check_User_Array.includes(i.user.id)) {
+                i.reply({
+                  content: "You are not able to use this!",
+                  embeds: [
+                    NotAbleToReactEmbed
+                  ],
+                  ephemeral: true
+                })
+                return;
+              }
+
+              const ReminderOptions = new MessageActionRow()
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId('ButDisableReminderForYou')
+                    .setLabel('Disable for you')
+                    .setStyle('DANGER'),
+                )
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId('ButDisableReminderForEveryone')
+                    .setLabel('Disable for everyone')
+                    .setStyle('DANGER'),
+                );
+
+              i.channel.send({
+                content: "What do you want to do?",
+                components: [
+                  ReminderOptions
                 ],
-                ephemeral: true,
+              }).then(sentMessage => {
+
+                const DisableReminderForYou = sentMessage.createMessageComponentCollector({
+                  componentType: 'BUTTON'
+                });
+
+                const DisableReminderForEveryone = sentMessage.createMessageComponentCollector({
+                  componentType: 'BUTTON'
+                });
+
+                DisableReminderForYou.on('collect', async i => {
+
+                  if (i.customId === 'ButDisableReminderForYou') {
+
+                    if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+                    WillNotPingArray.push(`${i.user}`);
+
+                    console.log(`${i.user.username} wont be notified for this schedule!`);
+
+                    i.reply({
+                      embeds: [
+                        DisableReminderForYouEmbed
+                      ]
+                    });
+
+                  }
+
+                });
+
+                DisableReminderForEveryone.on('collect', async i => {
+
+                  if (i.customId === "ButDisableReminderForEveryone") {
+
+                    if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+                    if (i.user.id !== interaction.member.user.id) {
+                      i.reply({
+                        content: "You are not able to use this!",
+                        embeds: [
+                          NotAbleToDeleteEmbed
+                        ],
+                      })
+                      return;
+                    }
+
+                    console.log(`${i.user.username} has disabled the reminder for everyone!`);
+
+                    try {
+
+                      reminderschedule.stop();
+                      closereminders.stop();
+                      customreminder.stop();
+                      stopcustomreminder.stop();
+
+                    } catch (e) {
+
+                      i.reply("Something went wrong! Please try again! If this error doesn't go away, please contact the developer!");
+                      console.log(`Something went wrong! Error: ${e}`);
+                      return;
+
+                    }
+
+                    i.reply({
+                      embeds: [
+                        DisableReminderForEveryoneEmbed
+                      ],
+                    });
+                  }
+
+                });
+              });
+              i.deferUpdate();
+            }
+
+            if (i.customId === "ButManageUpdates") {
+
+              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+              if (i.user.id !== interaction.member.user.id) {
+                i.reply({
+                  content: "You are not able to use this!",
+                  embeds: [
+                    NotAbleToDeleteEmbed
+                  ]
+                })
+                return;
+              }
+
+              StatusUpdates = true;
+
+              console.log(`${i.user.username} has enabled the status updates!`);
+
+              i.reply({
+                embeds: [
+                  EnableUpdateMessagesEmbed
+                ]
               });
             }
+
+            if (i.customId === "ButPlayerLate") {
+
+              if (HasBeenDeleted) return i.reply('This schedule has already been deleted!');
+
+              i.channel.send({
+                content: "\nAlright, please type the time at which you will be there (this will go in the description of the schedule). \nThe schedule will be updated when you type something or the message times out (2 minutes). \nPlease type the time in the following format: `HH:MM \n\nYou got 2 minutes until this message times out.`",
+              }).then(sentMessage => {
+
+                const Filter = Check_User_Array.includes(i.user.id);
+
+                const DelayCollector = sentMessage.channel.createMessageCollector({
+                  Filter, time: 120000, max: 1
+                });
+
+                let UserInput = ("");
+                let TimeAuthor = ("");
+
+                DelayCollector.on('collect', async m => {
+
+                  if (!m.content.match(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/)) { //Using this regex, we can check if the input follows the HH:MM format
+
+                    m.reply({
+                      content: "Please type the time in the following format: `HH:MM`",
+                    });
+                    return;
+
+                  }
+
+                  m.react('✅');
+                  UserInput = m.content;
+                  TimeAuthor = `${m.author}`;
+
+                });
+
+                // eslint-disable-next-line no-unused-vars
+                DelayCollector.on('end', collected => {
+
+                  if (HasBeenDeleted) return i.channel.send('Something went wrong. This schedule has already been deleted!');
+
+                  if (!UserInput) return;
+
+                  ScheduleEmbed.setDescription(ScrimDescripton.toString().replace(/,/g, '') + "\n" + "\n" + `⏰ <t:${timestamp.fromDate(event)}:R>` + "\n" + "\n" + FindArrayToUpdate(User_One_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Second_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Third_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fourth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Fith_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Sixth_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Seventh_Array, TimeAuthor, UserInput) + "\n" + "\n" + FindArrayToUpdate(User_Eighth_Array, TimeAuthor, UserInput));
+                  ScheduleEmbed.setColor('DARK_NAVY');
+                  ScheduleEmbed.setFooter({
+                    text: `Created by ${interaction.member.user.username} | Latest change by ${i.user.username}`
+                  });
+                  ScheduleEmbed.setTimestamp();
+
+                  ScheduleMessage.edit({
+                    embeds: [
+                      ScheduleEmbed
+                    ],
+                  });
+
+                  i.channel.send(`Got it, the schedule should be updated in a few seconds -> Your time: **${UserInput ? UserInput : "Error when collecting [Error: 20]"}**`);
+
+                });
+
+                i.deferUpdate();
+
+              });
+            }
+
           });
-        }),
+
+        });
+
+        DeleteCollector.on('collect', async (i) => {
+
+          if (i.customId === "ButDelete") {
+
+            if (i.user.id !== interaction.member.user.id) {
+              i.reply({
+                content: "You are not able to use this!",
+                embeds: [
+                  NotAbleToDeleteEmbed
+                ],
+                ephemeral: true
+              })
+              return;
+            }
+
+            try {
+
+              User_One_Array.pop();
+
+              User_Second_Array.pop();
+
+              User_Third_Array.pop();
+
+              User_Fourth_Array.pop();
+
+              User_Fith_Array.pop();
+
+              User_Sixth_Array.pop();
+
+              User_Seventh_Array.pop();
+
+              User_Eighth_Array.pop();
+
+              User_Ninth_Array.pop();
+
+              User_Tenth_Array.pop();
+
+              ScrimDescripton.pop();
+
+              MentionMessage.pop();
+
+              closereminders.stop();
+
+              reminderschedule.stop();
+
+              customreminder.stop();
+
+              stopcustomreminder.stop();
+
+            } catch {
+
+              const embed = new MessageEmbed()
+                .setDescription('Error ID: `BAD_ARRAY_POP / 9 ` Contact the Dev if you see this!')
+                .setColor('RED');
+
+              i.reply({
+                content: 'Something went wrong...!',
+                embeds: [
+                  embed
+                ],
+                ephemeral: true
+              });
+              return;
+            }
+
+            HasBeenDeleted = true;
+
+            sentMessage.delete().catch(() => {
+
+              console.log('Error ID: 10');
+
+            });
+
+            interaction.deleteReply().catch(() => {
+
+              console.log('Error ID: 11 | Interaction could not be deleted!');
+
+            });
+
+            console.log(`Schedule in ${interaction.channel.parent.name} got deleted!`);
+
+            i.reply({
+              embeds: [
+                SuccessfullyDeletedEmbed
+              ],
+              ephemeral: true,
+            });
+          }
+        });
+      }),
     );
   },
 };
