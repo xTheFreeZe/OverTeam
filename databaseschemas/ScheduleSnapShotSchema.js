@@ -16,7 +16,7 @@ const requiredNumber = {
 }
 
 const ScheduleSnapShotSchema = new mongoose.Schema({
-  _id: requiredNumber,
+  interaction: requiredString,
   name: requiredString,
   creationChannel: requiredString,
   channelID: requiredNumber,
@@ -41,6 +41,6 @@ const ScheduleSnapShotSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('SchedulePreset', ScheduleSnapShotSchema);
+module.exports = mongoose.model('ScheduleSnapShotSchema', ScheduleSnapShotSchema);
 
 console.log('Exported ScheduleSnapShotSchema.js');

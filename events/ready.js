@@ -5,7 +5,7 @@ module.exports = {
   once: true,
   async execute(client) {
 
-    //await ConnectToDatabase();
+    await ConnectToDatabase();
 
     client.user.setStatus('online');
     client.user.setPresence({
