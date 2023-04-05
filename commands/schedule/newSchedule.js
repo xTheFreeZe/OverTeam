@@ -72,6 +72,8 @@ module.exports = {
       },
     });
 
+    interaction.channel.send('Input recieved. This is where the user will be able to get questions about reminders and time!');
+
     const CheckIfScheduleExists = await ScheduleSnapShotSchema.findOne({
       identifier: `${interaction.channel.parent.name}-${interaction.channel.name}`,
     });
@@ -82,7 +84,34 @@ module.exports = {
 
       const filter = { "identifier": `${interaction.channel.parent.name}-${interaction.channel.name}` };
 
-      ScheduleSnapShotSchema.findOneAndUpdate({ filter, newScheduleSnapShot }).catch((err) => {
+      const updateScheduleSnapShot = {
+        interaction: interaction,
+        identifier: identifier,
+        name: `${interaction.channel.parent.name}`,
+        creationChannel: `${interaction.channel.name}`,
+        channelID: `${interaction.channel.id}`,
+        creationDate: `${interaction.createdAt}`,
+        creationDateInUnix: `${Math.floor(Date.now() / 1000)}`,
+        description: `${interaction.options.getString('description')}`,
+        scheduleCreator: `${interaction.member}`,
+        scheduleCreatorID: `${interaction.member.id}`,
+        scrimTime: `${interaction.options.getString('scrim-time')}`,
+        reminderDate: `${interaction.options.getNumber('reminder-date')}`,
+        users: {
+          userOne: `${interaction.options.getMember('user-one')}`,
+          userTwo: `${interaction.options.getMember('user-second')}`,
+          userThree: `${interaction.options.getMember('user-third')}`,
+          userFour: `${interaction.options.getMember('user-fourth')}`,
+          userFive: `${interaction.options.getMember('user-fith')}`,
+          userSix: `${interaction.options.getMember('user-sixth')}`,
+          userSeven: `${interaction.options.getMember('user-seventh')}`,
+          userEight: `${interaction.options.getMember('user-eighth')}`,
+          userNine: `${interaction.options.getMember('user-nine')}`,
+          userTen: `${interaction.options.getMember('user-ten')}`,
+        },
+      }
+
+      await ScheduleSnapShotSchema.findOneAndUpdate(filter, updateScheduleSnapShot, { new: true }).catch((err) => {
 
         console.log(err);
         return interaction.reply('Something went wrong while updating the schedule!');

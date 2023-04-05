@@ -92,6 +92,12 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
         .setCustomId('schedule_button_tentative')
         .setEmoji(tentativeEmoji)
         .setStyle('SECONDARY'),
+    )
+    .addComponents(
+      new MessageButton()
+        .setCustomId('schedule_button_delete')
+        .setLabel('Delete')
+        .setStyle('DANGER'),
     );
 
 
@@ -100,10 +106,10 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
     .setColor("#0099ff")
     .setDescription(embedDescription)
     .setFooter({
-      text: `Schedule created by ${data.scheduleCreator}`,
+      text: reminderString,
     });
 
-  channel.send({ content: reminderString, embeds: [scheduleEmbed], components: [Buttons] });
+  channel.send({ content: 'Here is your schedule:', embeds: [scheduleEmbed], components: [Buttons] });
 
 };
 
