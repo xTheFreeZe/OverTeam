@@ -5,7 +5,9 @@
 
 ## Description
 
-Overteam is a private Discord bot that allows users to create and manage schedules for events. Users can RSVP to events by responding with "yes," "no," or "maybe" to the event.
+>This bot is still in development. It is not ready for use.
+
+Overteam is a private Discord bot, that allows users to create and manage schedules for events. Users can RSVP to events by responding with "yes," "no," or "maybe" to the event.
 
 > Because it is private, OverTeam won't be available for your server. However, if the bot get's fast enough, I will consider making it public. If you want to use OverTeam, you can clone the repository and host it yourself. If you do, please make sure to credit me in your bot's description.
 
