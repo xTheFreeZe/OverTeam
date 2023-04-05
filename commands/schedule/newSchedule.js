@@ -44,10 +44,12 @@ module.exports = {
 
     const newScheduleSnapShot = new ScheduleSnapShotSchema({
       interaction: interaction,
+      identifier: `${interaction.channel.parent.name}-${interaction.channel.name}`,
       name: `${interaction.channel.parent.name}`,
       creationChannel: `${interaction.channel.name}`,
       channelID: `${interaction.channel.id}`,
       creationDate: `${interaction.createdAt}`,
+      creationDateInUnix: `${Math.floor(Date.now() / 1000)}`,
       description: `${interaction.options.getString('description')}`,
       scheduleCreator: `${interaction.member}`,
       scheduleCreatorID: `${interaction.member.id}`,
@@ -65,7 +67,35 @@ module.exports = {
       },
     });
 
-    await newScheduleSnapShot.save();
+    const CheckIfScheduleExists = await ScheduleSnapShotSchema.findOne({
+      identifier: `${interaction.channel.parent.name}-${interaction.channel.name}`,
+    });
+
+    if (CheckIfScheduleExists) {
+
+      console.log('Schedule did already exist!');
+
+      const filter = { "identifier": `${interaction.channel.parent.name}-${interaction.channel.name}` };
+
+      ScheduleSnapShotSchema.findOneAndUpdate({ filter, newScheduleSnapShot }).catch((err) => {
+
+        console.log(err);
+        return interaction.reply('Something went wrong while updating the schedule!');
+
+      });
+
+    } else {
+
+      console.log('Schedule did not yet exist!');
+
+      await newScheduleSnapShot.save().catch((err) => {
+
+        console.log(err);
+        return interaction.reply('Something went wrong while creating the schedule!');
+
+      });
+
+    }
 
     console.log('Saved new schedule to database!');
 

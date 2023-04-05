@@ -17,6 +17,7 @@ const requiredNumber = {
 
 const ScheduleSnapShotSchema = new mongoose.Schema({
   interaction: requiredString,
+  identifier: requiredString,
   name: requiredString,
   creationChannel: requiredString,
   channelID: requiredNumber,
@@ -24,6 +25,7 @@ const ScheduleSnapShotSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  creationDateInUnix: requiredNumber,
   description: requiredString,
   scheduleCreator: requiredString,
   scheduleCreatorID: requiredNumber,
