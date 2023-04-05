@@ -1,9 +1,11 @@
 # **OverTeam**
 
+![OverTeam preview](./assets/OTP.jpg "OverTeam preview")
+
 
 ## Description
 
->Overteam is a private Discord bot that allows users to create and manage schedules for events. Users can RSVP to events by responding with "yes," "no," or "maybe" to the event.
+Overteam is a private Discord bot that allows users to create and manage schedules for events. Users can RSVP to events by responding with "yes," "no," or "maybe" to the event.
 
 > Because it is private, OverTeam won't be available for your server. However, if the bot get's fast enough, I will consider making it public. If you want to use OverTeam, you can clone the repository and host it yourself. If you do, please make sure to credit me in your bot's description.
 
@@ -15,7 +17,7 @@ Customizable notifications and reminders for events
 
 ## Contributing
 
->I welcome contributions to OverTeam! If you're interested in contributing, please fork the repository and create a new branch for your feature or bug fix. Once you've made your changes, create a pull request with a detailed description of your changes and why you think they should be added to the bot. I'll review your pull request and work with you to incorporate your changes into the bot. Thank you for your interest in contributing to OverTeam!
+I welcome contributions to OverTeam! If you're interested in contributing, please fork the repository and create a new branch for your feature or bug fix. Once you've made your changes, create a pull request with a detailed description of your changes and why you think they should be added to the bot. I'll review your pull request and work with you to incorporate your changes into the bot. Thank you for your interest in contributing to OverTeam!
 
 ## License
 
