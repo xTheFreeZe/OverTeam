@@ -1,4 +1,4 @@
-const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema.js');
+const SchedulePresetSchema = require('../../../databaseschemas/SchedulePresetSchema.js');
 const {MessageEmbed} = require("discord.js");
 
 /**

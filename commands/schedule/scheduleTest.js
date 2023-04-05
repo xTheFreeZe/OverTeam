@@ -16,7 +16,7 @@ const timestamp = require('unix-timestamp');
 const { FindArrayToUpdate, CreateScheduleReminderMessage } = require('../../functions/functions.js');
 
 const SchedulePresetSchema = require('../../databaseschemas/SchedulePresetSchema.js');
-const CreateNewPreset = require('../../functions/Schedules/CreateNewPreset.js');
+const CreateNewPreset = require('../../functions/schedules/presets/CreateNewPreset.js');
 
 //This code has been written by me, Marwin!
 

@@ -5,6 +5,7 @@ const {
 } = require('@discordjs/builders');
 
 const ScheduleSnapShotSchema = require('../../databaseschemas/ScheduleSnapShotSchema.js');
+const DisplaySchedule = require('../../functions/schedules/standert/DisplaySchedule.js');
 
 //This code has been written by me, Marwin!
 
@@ -34,7 +35,7 @@ module.exports = {
 
     .addUserOption(option => option.setName('user-ten').setDescription('Add a user to mention in the schedule!'))
 
-    .addNumberOption(option => option.setName('scrim-time').setDescription('Time for the little timestamp inside of your schedule. If you scrim at 19 CET, write 19'))
+    .addStringOption(option => option.setName('scrim-time').setDescription('Time for the little timestamp inside of your schedule. If you scrim at 19 CET, write 19'))
 
     .addNumberOption(option => option.setName('reminder-date').setDescription('The date of the day you want to be reminded at!'))
 
@@ -42,9 +43,11 @@ module.exports = {
 
   async execute(interaction) {
 
+    const identifier = `${interaction.channel.parent.name}-${interaction.channel.name}`;
+
     const newScheduleSnapShot = new ScheduleSnapShotSchema({
       interaction: interaction,
-      identifier: `${interaction.channel.parent.name}-${interaction.channel.name}`,
+      identifier: identifier,
       name: `${interaction.channel.parent.name}`,
       creationChannel: `${interaction.channel.name}`,
       channelID: `${interaction.channel.id}`,
@@ -53,6 +56,8 @@ module.exports = {
       description: `${interaction.options.getString('description')}`,
       scheduleCreator: `${interaction.member}`,
       scheduleCreatorID: `${interaction.member.id}`,
+      scrimTime: `${interaction.options.getString('scrim-time')}`,
+      reminderDate: `${interaction.options.getNumber('reminder-date')}`,
       users: {
         userOne: `${interaction.options.getMember('user-one')}`,
         userTwo: `${interaction.options.getMember('user-second')}`,
@@ -97,11 +102,11 @@ module.exports = {
 
     }
 
-    console.log('Saved new schedule to database!');
+    console.log('Saving/updating process complete!');
 
-    interaction.reply({
-      content: `Created a new schedule!`,
-    });
+    DisplaySchedule(identifier); //This will display the schedule in the channel
+
+    interaction.reply('Created a new schedule!');
 
   },
 };
