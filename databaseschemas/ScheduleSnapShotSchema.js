@@ -26,7 +26,7 @@ const ScheduleSnapShotSchema = new mongoose.Schema({
     default: Date.now,
   },
   creationDateInUnix: requiredNumber,
-  description: requiredString,
+  description: nonRequiredString,
   scheduleCreator: requiredString,
   scheduleCreatorID: requiredNumber,
   meetingTime: nonRequiredString,

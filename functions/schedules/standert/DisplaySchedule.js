@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 const GetScheduleData = require('./GetScheduleData.js');
-const { MessageEmbed } = require("discord.js");
+const { MessageEmbed, MessageButton, MessageActionRow } = require("discord.js");
 
 /**
  * This will display the schedule in the channel
@@ -12,25 +12,30 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const channel = interactionchannel;
 
   const neutralEmoji = "<:OverTeam_Neutral:1074132245696233573>";
+  const yesEmoji = "<:OverTeam_Yes:1074131419535777884>";
+  const noEmoji = "<:OverTeam_No:1074131594593452134>";
+  const tentativeEmoji = "<:OverTeam_Tentative:1074131651132666017>";
 
   console.log(data);
 
   const scheduleName = data.name;
   const scheduleCreationDateInUnix = data.creationDateInUnix;
-  const scheduleDescription = data.description;
+  const scheduleDescription = data.description == null ? data.description : "React to change your availability!";
   const scheduleMeetingTime = data.meetingTime ? data.meetingTime : "Not set yet!";
-  const scheduleReminderDate = data.reminderDate ? data.reminderDate : undefined;
+  const scheduleReminderDate = data.reminderDate ? data.reminderDate : null;
 
   const userOne = data.users.userOne;
-  const userTwo = data.users.userTwo ? data.users.userTwo : undefined;
-  const userThree = data.users.userThree ? data.users.userThree : undefined;
-  const userFour = data.users.userFour ? data.users.userFour : undefined;
-  const userFive = data.users.userFive ? data.users.userFive : undefined;
-  const userSix = data.users.userSix ? data.users.userSix : undefined;
-  const userSeven = data.users.userSeven ? data.users.userSeven : undefined;
-  const userEight = data.users.userEight ? data.users.userEight : undefined;
-  const userNine = data.users.userNine ? data.users.userNine : undefined;
-  const userTen = data.users.userTen ? data.users.userTen : undefined;
+  const userTwo = data.users.userTwo ? data.users.userTwo : null;
+  const userThree = data.users.userThree ? data.users.userThree : null;
+  const userFour = data.users.userFour ? data.users.userFour : null;
+  const userFive = data.users.userFive ? data.users.userFive : null;
+  const userSix = data.users.userSix ? data.users.userSix : null;
+  const userSeven = data.users.userSeven ? data.users.userSeven : null;
+  const userEight = data.users.userEight ? data.users.userEight : null;
+  const userNine = data.users.userNine ? data.users.userNine : null;
+  const userTen = data.users.userTen ? data.users.userTen : null;
+
+  const reminderString = scheduleReminderDate == null ? `${scheduleReminderDate} before start.` : 'No reminder set.';
 
   const userOneString = `${neutralEmoji} ${userOne}`;
   const userTwoString = userTwo == null ? `${neutralEmoji} ${userTwo}` : '';
@@ -44,11 +49,10 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const userTenString = userTen == null ? `${neutralEmoji} ${userTen}` : '';
 
   const embedDescription =
-    `> **${scheduleDescription}**
+    `**${scheduleDescription}**
 
-  > **Meeting time:** ${scheduleMeetingTime}
-
-  > **Created <t:${scheduleCreationDateInUnix}:R>**
+  ⏰ **Meeting time:** ${scheduleMeetingTime}
+  ⌚ **Created <t:${scheduleCreationDateInUnix}:R>**
 
   ${userOneString}
 
@@ -70,14 +74,36 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
 
   ${userTenString}`;
 
+  const Buttons = new MessageActionRow()
+    .addComponents(
+      new MessageButton()
+        .setCustomId('schedule_button_yes')
+        .setEmoji(yesEmoji)
+        .setStyle('SECONDARY'),
+    )
+    .addComponents(
+      new MessageButton()
+        .setCustomId('schedule_button_no')
+        .setEmoji(noEmoji)
+        .setStyle('SECONDARY'),
+    )
+    .addComponents(
+      new MessageButton()
+        .setCustomId('schedule_button_tentative')
+        .setEmoji(tentativeEmoji)
+        .setStyle('SECONDARY'),
+    );
+
+
   const scheduleEmbed = new MessageEmbed()
     .setTitle(`Schedule: ${scheduleName}`)
+    .setColor("#0099ff")
     .setDescription(embedDescription)
     .setFooter({
       text: `Schedule created by ${data.scheduleCreator}`,
     });
 
-  channel.send({content:"Here is your schedule:" ,embeds: [scheduleEmbed] });
+  channel.send({ content: reminderString, embeds: [scheduleEmbed], components: [Buttons] });
 
 };
 
