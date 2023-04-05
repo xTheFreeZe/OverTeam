@@ -29,7 +29,7 @@ const ScheduleSnapShotSchema = new mongoose.Schema({
   description: requiredString,
   scheduleCreator: requiredString,
   scheduleCreatorID: requiredNumber,
-  scrimTime: nonRequiredString,
+  meetingTime: nonRequiredString,
   reminderDate: nonRequiredString,
   users: {
     userOne: requiredString,

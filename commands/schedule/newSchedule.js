@@ -104,9 +104,13 @@ module.exports = {
 
     console.log('Saving/updating process complete!');
 
-    DisplaySchedule(identifier); //This will display the schedule in the channel
+    await interaction.reply('```Schedule is being created. Please wait a second...```');
 
-    interaction.reply('Created a new schedule!');
+    setTimeout(() => {
+      interaction.deleteReply();
+    }, 1000);
+
+    DisplaySchedule(identifier, interaction.channel); //This will display the schedule in the channel
 
   },
 };
