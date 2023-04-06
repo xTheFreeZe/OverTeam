@@ -95,6 +95,12 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
     )
     .addComponents(
       new MessageButton()
+        .setCustomId('schedule_button_manage')
+        .setLabel('Manage')
+        .setStyle('PRIMARY'),
+    )
+    .addComponents(
+      new MessageButton()
         .setCustomId('schedule_button_delete')
         .setLabel('Delete')
         .setStyle('DANGER'),
