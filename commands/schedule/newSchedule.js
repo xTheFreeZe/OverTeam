@@ -4,6 +4,8 @@ const {
   SlashCommandBuilder
 } = require('@discordjs/builders');
 
+const { MessageEmbed } = require('discord.js');
+
 const { parseScheduleTime, checkFormat } = require('../../functions/schedules/standert/CheckScheduleTimes.js');
 const saveScheduleTODB = require('../../functions/schedules/standert/SaveScheduleToDB.js');
 
@@ -42,6 +44,9 @@ module.exports = {
     const identifier = `${interaction.channel.parent.name}-${interaction.channel.name}`;
     interaction.reply('Hello, please answer the following questions: \n**If you want to cancel, type `cancel`** \n\n');
 
+    //This Array will hold all messages sent by the bot and by the user, so we can delete while the schedule is being created.
+    const messages = [];
+
     //These are the strings that are shown to the user. They display whatever the user typed.
     let meetingDayString = '';
     let meetingTimeString = '';
@@ -52,7 +57,13 @@ module.exports = {
     let devMeetingTimeString = '';
     let devReminderTimeString = '';
 
-    interaction.channel.send('Alright, let\'s create this schedule. First of all, in how many days does this meeting take place? Please use the `d:h:m` (day,hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `d` for days and `m` for minutes').then(sentMessage => {
+    const meetingDayEmbed = new MessageEmbed()
+      .setDescription('Alright, let\'s create this schedule. First of all, in how many days does this meeting take place? Please use the `d:h:m` (day,hour,minute) format.')
+      .setFooter({
+        text: 'If this takes place in a day, type `1d`. Use `h` for hours and `m` for minutes'
+      });
+
+    interaction.channel.send({ embeds: [meetingDayEmbed] }).then(sentMessage => {
 
       const meetingDayCollector = sentMessage.channel.createMessageCollector({
         time: 60000, max: 1
@@ -72,7 +83,16 @@ module.exports = {
         console.log('Collected day:', m.content);
         console.log('devMeetingDayString', devMeetingDayString);
 
-        sentMessage.channel.send('Alright, got it,' + `**${meetingDayString}**. ` + 'When does the meeting take place on that day? Please use the `h:m` (hour,minute) format. \nIf this takes place at 8pm, type `20:00`').then(sentMessage => {
+        messages.push(sentMessage);
+        messages.push(m);
+
+        const meetingTimeEmbed = new MessageEmbed()
+          .setDescription('Alright, got it,' + `**${meetingDayString}**. ` + 'When does the meeting take place on that day? Please use the `h:m` (hour,minute) format.')
+          .setFooter({
+            text: 'If this takes place at 8pm, type `20:00`'
+          });
+
+        sentMessage.channel.send({ embeds: [meetingTimeEmbed] }).then(sentMessage => {
 
           const meetingTimeCollector = sentMessage.channel.createMessageCollector({
             time: 60000, max: 1
@@ -89,7 +109,16 @@ module.exports = {
             console.log('Collected time: ', m.content);
             console.log('devMeetingTimeString', devMeetingTimeString);
 
-            sentMessage.channel.send(`Takes place in **${meetingDayString}** at **${meetingTimeString}**. ` + 'Last question: How many hours/minutes do you want to be reminded before the meeting? \nPlease use the `h:m` (hour,minute) format. \nIf you want to be reminded an hour before , type `1h`. Use `m` for minutes').then(sentMessage => {
+            messages.push(sentMessage);
+            messages.push(m);
+
+            const reminderTimeEmbed = new MessageEmbed()
+              .setDescription(`This meeting will take place in ${meetingDayString} at ${meetingTimeString}.\n` + 'Last question: How many hours/minutes do you want to be reminded before the meeting? Please use the `h:m` (hour,minute) format.')
+              .setFooter({
+                text: 'If you want to be reminded an hour before , type `1h`. Use `m` for minutes'
+              });
+
+            sentMessage.channel.send({ embeds: [reminderTimeEmbed] }).then(sentMessage => {
 
               const reminderTimeCollector = sentMessage.channel.createMessageCollector({
                 time: 60000, max: 1
@@ -109,7 +138,15 @@ module.exports = {
                 console.log('Collected reminder: ', m.content);
                 console.log('devReminderTimeString', devReminderTimeString);
 
-                sentMessage.channel.send(`Alright, got it. You will be reminded **${reminderTimeString}** before the meeting. ` + 'Now, please hold on as your schedule is created!').then(sentMessage => {
+                messages.push(sentMessage);
+                messages.push(m);
+
+                const successEmbed = new MessageEmbed()
+                  .setTitle('Creation success!')
+                  .setDescription(`Alright, got it. You will be reminded **${reminderTimeString}** before the meeting. ` + 'Now, please hold on as your schedule is created!')
+                  .setColor('GREEN');
+
+                sentMessage.channel.send({ embeds: [successEmbed] }).then(sentMessage => {
 
                   const obj = {
                     interaction: interaction,
@@ -137,6 +174,20 @@ module.exports = {
                       userNine: `${interaction.options.getMember('user-nine')}`,
                       userTen: `${interaction.options.getMember('user-ten')}`,
                     },
+                  }
+
+                  messages.push(sentMessage);
+                  messages.push(m);
+
+                  for (const message of messages) {
+
+                    setTimeout(() => {
+                      message.delete().catch((err) => {
+                        console.log('Error deleting message: ', err);
+                        return;
+                      });
+                    }, 300);
+
                   }
 
                   saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
