@@ -21,6 +21,7 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const scheduleName = data.name;
   const scheduleCreationDateInUnix = data.creationDateInUnix;
   const scheduleDescription = data.description == null ? data.description : "React to change your availability!";
+  const scheduleMeetingDay = data.meetingDay ? data.meetingDay : "Not set yet!";
   const scheduleMeetingTime = data.meetingTime ? data.meetingTime : "Not set yet!";
   const scheduleReminderDate = data.reminderDate ? data.reminderDate : null;
 
@@ -35,18 +36,18 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const userNine = data.users.userNine ? data.users.userNine : null;
   const userTen = data.users.userTen ? data.users.userTen : null;
 
-  const reminderString = scheduleReminderDate == null ? `${scheduleReminderDate} before start.` : 'No reminder set.';
+  const reminderString = scheduleReminderDate == null ? 'No reminder set!' : `Reminder set!`;
 
   const userOneString = `${neutralEmoji} ${userOne}`;
-  const userTwoString = userTwo == null ? `${neutralEmoji} ${userTwo}` : '';
-  const userThreeString = userThree == null ? `${neutralEmoji} ${userThree}` : '';
-  const userFourString = userFour == null ? `${neutralEmoji} ${userFour}` : '';
-  const userFiveString = userFive == null ? `${neutralEmoji} ${userFive}` : '';
-  const userSixString = userSix == null ? `${neutralEmoji} ${userSix}` : '';
-  const userSevenString = userSeven == null ? `${neutralEmoji} ${userSeven}` : '';
-  const userEightString = userEight == null ? `${neutralEmoji} ${userEight}` : '';
-  const userNineString = userNine == null ? `${neutralEmoji} ${userNine}` : '';
-  const userTenString = userTen == null ? `${neutralEmoji} ${userTen}` : '';
+  const userTwoString = userTwo == null ? '' : `${neutralEmoji} ${userTwo}`;
+  const userThreeString = userThree == null ? '' : `${neutralEmoji} ${userThree}`;
+  const userFourString = userFour == null ? '' : `${neutralEmoji} ${userFour}`;
+  const userFiveString = userFive == null ? '' : `${neutralEmoji} ${userFive}`;
+  const userSixString = userSix == null ? '' : `${neutralEmoji} ${userSix}`;
+  const userSevenString = userSeven == null ? '' : `${neutralEmoji} ${userSeven}`;
+  const userEightString = userEight == null ? '' : `${neutralEmoji} ${userEight}`;
+  const userNineString = userNine == null ? '' : `${neutralEmoji} ${userNine}`;
+  const userTenString = userTen == null ? '' : `${neutralEmoji} ${userTen}`;
 
   const embedDescription =
     `**${scheduleDescription}**
