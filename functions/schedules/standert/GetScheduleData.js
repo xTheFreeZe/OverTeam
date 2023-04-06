@@ -23,6 +23,7 @@ const GetScheduleData = async (identifier) => {
     description: data.description,
     scheduleCreator: data.scheduleCreator,
     scheduleCreatorID: data.scheduleCreatorID,
+    meetingDay: data.meetingDay,
     meetingTime: data.meetingTime,
     reminderDate: data.reminderDate,
     users: {
