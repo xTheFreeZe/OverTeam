@@ -65,8 +65,10 @@ module.exports = {
 
     interaction.channel.send({ embeds: [meetingDayEmbed] }).then(sentMessage => {
 
+      const filter = m => m.author.id === interaction.member.id;
+
       const meetingDayCollector = sentMessage.channel.createMessageCollector({
-        time: 60000, max: 1
+        filter, time: 60000, max: 1
       });
 
       meetingDayCollector.on('collect', m => {
@@ -74,7 +76,6 @@ module.exports = {
         const pattern = /^(\d+)([mhd])$/;
         const match = m.content.match(pattern);
 
-        if (m.author.id !== interaction.user.id) return interaction.channel.send('Wrong person buddy!');
         if (!match) return interaction.channel.send('Please use the `d:h:m` (day,hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `d` for days and `m` for minutes');
 
         devMeetingDayString = parseScheduleTime(m.content);
@@ -94,13 +95,14 @@ module.exports = {
 
         sentMessage.channel.send({ embeds: [meetingTimeEmbed] }).then(sentMessage => {
 
+          const filter = m => m.author.id === interaction.member.id;
+
           const meetingTimeCollector = sentMessage.channel.createMessageCollector({
-            time: 60000, max: 1
+            filter, time: 60000, max: 1
           });
 
           meetingTimeCollector.on('collect', m => {
 
-            if (m.author.id !== interaction.user.id) return interaction.channel.send('Wrong person buddy!');
             if (!checkFormat(m.content)) return interaction.channel.send('Please use the `h:m` (hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `m` for minutes');
 
             devMeetingTimeString = m.content;
@@ -120,8 +122,10 @@ module.exports = {
 
             sentMessage.channel.send({ embeds: [reminderTimeEmbed] }).then(sentMessage => {
 
+              const filter = m => m.author.id === interaction.member.id;
+
               const reminderTimeCollector = sentMessage.channel.createMessageCollector({
-                time: 60000, max: 1
+                filter, time: 60000, max: 1
               });
 
               reminderTimeCollector.on('collect', m => {
@@ -129,7 +133,6 @@ module.exports = {
                 const pattern = /^(\d+)([mhd])$/;
                 const match = m.content.match(pattern);
 
-                if (m.author.id !== interaction.user.id) return interaction.channel.send('Wrong person buddy!');
                 if (!match) return interaction.channel.send('Please use the `d:h:m` (day,hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `d` for days and `m` for minutes');
 
                 reminderTimeString = m.content;
@@ -176,6 +179,8 @@ module.exports = {
                     },
                   }
 
+                  saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
+
                   messages.push(sentMessage);
                   messages.push(m);
 
@@ -189,8 +194,6 @@ module.exports = {
                     }, 300);
 
                   }
-
-                  saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
 
                 });
               });
