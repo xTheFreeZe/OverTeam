@@ -17,6 +17,7 @@
     "node-cache": "^5.1.2",
     "node-cron": "^3.0.2",
     "unix-timestamp": "^1.0.2",
+    "uuid": "^9.0.0",
     "ws": "^8.12.0"
   }
 }

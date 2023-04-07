@@ -78,31 +78,31 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const Buttons = new MessageActionRow()
     .addComponents(
       new MessageButton()
-        .setCustomId('schedule_button_yes')
+        .setCustomId(`${indentifier}_schedule_button_yes`)
         .setEmoji(yesEmoji)
         .setStyle('SECONDARY'),
     )
     .addComponents(
       new MessageButton()
-        .setCustomId('schedule_button_no')
+        .setCustomId(`${indentifier}_schedule_button_no`)
         .setEmoji(noEmoji)
         .setStyle('SECONDARY'),
     )
     .addComponents(
       new MessageButton()
-        .setCustomId('schedule_button_tentative')
+        .setCustomId(`${indentifier}_schedule_button_tentative`)
         .setEmoji(tentativeEmoji)
         .setStyle('SECONDARY'),
     )
     .addComponents(
       new MessageButton()
-        .setCustomId('schedule_button_manage')
+        .setCustomId(`${indentifier}_schedule_button_manage`)
         .setLabel('Manage')
         .setStyle('PRIMARY'),
     )
     .addComponents(
       new MessageButton()
-        .setCustomId('schedule_button_delete')
+        .setCustomId(`${indentifier}schedule_button_delete`)
         .setLabel('Delete')
         .setStyle('DANGER'),
     );

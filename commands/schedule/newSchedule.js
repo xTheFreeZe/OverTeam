@@ -8,6 +8,7 @@ const { MessageEmbed } = require('discord.js');
 
 const { parseScheduleTime, checkFormat } = require('../../functions/schedules/standert/CheckScheduleTimes.js');
 const saveScheduleTODB = require('../../functions/schedules/standert/SaveScheduleToDB.js');
+const generateUniqueID = require('../../functions/schedules/standert/generateUniqueID.js');
 
 const wait = require('node:timers/promises').setTimeout;
 const timer = ms => new Promise(res => setTimeout(res, ms))
@@ -44,7 +45,7 @@ module.exports = {
 
   async execute(interaction) {
 
-    const identifier = `${interaction.channel.parent.name}-${interaction.channel.name}`;
+    const identifier = `${generateUniqueID()}`;
     interaction.reply('If you want to cancel, type `cancel` **anytime**. For a default schedule, type `default/d` **now**. \n\n A default schedule will be created with the following settings: \n\n **Meeting day:** 1 day \n **Meeting time:** 20:00 \n **Reminder time:** 30 m \n **Description:** No description provided.');
 
     //This Array will hold all messages sent by the bot and by the user, so we can delete while the schedule is being created.
