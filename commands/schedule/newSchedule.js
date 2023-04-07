@@ -9,6 +9,9 @@ const { MessageEmbed } = require('discord.js');
 const { parseScheduleTime, checkFormat } = require('../../functions/schedules/standert/CheckScheduleTimes.js');
 const saveScheduleTODB = require('../../functions/schedules/standert/SaveScheduleToDB.js');
 
+const wait = require('node:timers/promises').setTimeout;
+const timer = ms => new Promise(res => setTimeout(res, ms))
+
 //This code has been written by me, Marwin!
 
 module.exports = {
@@ -42,7 +45,7 @@ module.exports = {
   async execute(interaction) {
 
     const identifier = `${interaction.channel.parent.name}-${interaction.channel.name}`;
-    interaction.reply('Hello, please answer the following questions: \n**If you want to cancel, type `cancel`** \n\n');
+    interaction.reply('Setting up schedule. **If you want to cancel, type `cancel` anytime.** For a default schedule, type `default` now once.\n\n');
 
     //This Array will hold all messages sent by the bot and by the user, so we can delete while the schedule is being created.
     const messages = [];
@@ -58,7 +61,7 @@ module.exports = {
     let devReminderTimeString = '';
 
     const meetingDayEmbed = new MessageEmbed()
-      .setDescription('Alright, let\'s create this schedule. First of all, in how many days does this meeting take place? Please use the `d:h:m` (day,hour,minute) format.')
+      .setDescription('Alright, let\'s create this schedule. First of all, in how many days/hours does this meeting take place?')
       .setFooter({
         text: 'If this takes place in a day, type `1d`. Use `h` for hours and `m` for minutes'
       });
@@ -72,6 +75,8 @@ module.exports = {
       });
 
       meetingDayCollector.on('collect', m => {
+
+        if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
 
         const pattern = /^(\d+)([mhd])$/;
         const match = m.content.match(pattern);
@@ -88,7 +93,7 @@ module.exports = {
         messages.push(m);
 
         const meetingTimeEmbed = new MessageEmbed()
-          .setDescription('Alright, got it,' + `**${meetingDayString}**. ` + 'When does the meeting take place on that day? Please use the `h:m` (hour,minute) format.')
+          .setDescription('Alright ' + `**${meetingDayString}**. ` + 'When does the meeting take place on that day?')
           .setFooter({
             text: 'If this takes place at 8pm, type `20:00`'
           });
@@ -102,6 +107,8 @@ module.exports = {
           });
 
           meetingTimeCollector.on('collect', m => {
+
+            if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
 
             if (!checkFormat(m.content)) return interaction.channel.send('Please use the `h:m` (hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `m` for minutes');
 
@@ -129,6 +136,8 @@ module.exports = {
               });
 
               reminderTimeCollector.on('collect', m => {
+
+                if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
 
                 const pattern = /^(\d+)([mhd])$/;
                 const match = m.content.match(pattern);
@@ -184,16 +193,28 @@ module.exports = {
                   messages.push(sentMessage);
                   messages.push(m);
 
-                  for (const message of messages) {
+                  async function deleteMessages(messages) {
 
-                    setTimeout(() => {
-                      message.delete().catch((err) => {
+                    for (let i = 0; i < messages.length; i++) {
+
+                      await wait(1000);
+
+                      console.log('Deleting message: ', messages[i].content);
+                      console.log(`Deleting message number ${i + 1} out of ${messages.length} messages.`);
+
+                      try {
+
+                        await messages[i].delete();
+
+                      } catch (err) {
+
                         console.log('Error deleting message: ', err);
-                        return;
-                      });
-                    }, 300);
 
+                      }
+                    }
                   }
+
+                  deleteMessages(messages);
 
                 });
               });
