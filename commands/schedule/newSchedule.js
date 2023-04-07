@@ -137,13 +137,19 @@ module.exports = {
 
       meetingDayCollector.on('collect', m => {
 
+        //This is a one time thing, where the user can type 'default' or 'd' to create a default schedule.
+        //This only works for the first question.
         if (m.content === 'default' || m.content === 'd') {
+
+          messages.push(sentMessage);
+          messages.push(m);
+          messages.push('placeholder'); //This is a placeholder because the bot deletes messages.length -1. This is to prevent an error.
+
+          console.log('Default schedule created.');
 
           devMeetingDayString = parseScheduleTime('1d');
           devMeetingTimeString = '20:00';
           devReminderTimeString = parseScheduleTime('30m');
-
-          interaction.channel.send('Default schedule created!');
 
           scheduleSetupComplete();
 
