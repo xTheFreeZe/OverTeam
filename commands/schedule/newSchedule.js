@@ -45,7 +45,7 @@ module.exports = {
   async execute(interaction) {
 
     const identifier = `${interaction.channel.parent.name}-${interaction.channel.name}`;
-    interaction.reply('Setting up schedule. **If you want to cancel, type `cancel` anytime.** For a default schedule, type `default` now once.\n\n');
+    interaction.reply('Setting up schedule. **If you want to cancel, type `cancel` anytime.** For a default schedule, type `default/d` now once.\n\n');
 
     //This Array will hold all messages sent by the bot and by the user, so we can delete while the schedule is being created.
     const messages = [];
@@ -60,8 +60,69 @@ module.exports = {
     let devMeetingTimeString = '';
     let devReminderTimeString = '';
 
+    const scheduleSetupComplete = () => {
+
+      const obj = {
+        interaction: interaction,
+        identifier: identifier,
+        name: `${interaction.channel.parent.name}`,
+        creationChannel: `${interaction.channel.name}`,
+        channelID: `${interaction.channel.id}`,
+        creationDate: `${interaction.createdAt}`,
+        creationDateInUnix: `${Math.floor(Date.now() / 1000)}`,
+        description: `${interaction.options.getString('description')}`,
+        scheduleCreator: `${interaction.member}`,
+        scheduleCreatorID: `${interaction.member.id}`,
+        meetingDay: `${devMeetingDayString}`,
+        meetingTime: `${devMeetingTimeString}`,
+        reminderDate: `${devReminderTimeString}`,
+        users: {
+          userOne: `${interaction.options.getMember('user-one')}`,
+          userTwo: `${interaction.options.getMember('user-second')}`,
+          userThree: `${interaction.options.getMember('user-third')}`,
+          userFour: `${interaction.options.getMember('user-fourth')}`,
+          userFive: `${interaction.options.getMember('user-fith')}`,
+          userSix: `${interaction.options.getMember('user-sixth')}`,
+          userSeven: `${interaction.options.getMember('user-seventh')}`,
+          userEight: `${interaction.options.getMember('user-eighth')}`,
+          userNine: `${interaction.options.getMember('user-nine')}`,
+          userTen: `${interaction.options.getMember('user-ten')}`,
+        },
+      }
+
+      saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
+
+      async function deleteMessages(messages) {
+
+        for (let i = 0; i < messages.length - 1; i++) {
+
+          await wait(1000);
+
+          console.log('Deleting message: ', messages[i].content);
+          console.log(`Deleting message number ${i + 1} out of ${messages.length} messages.`);
+
+          try {
+
+            await messages[i].delete();
+
+          } catch (err) {
+
+            console.log('Error deleting message: ', err);
+
+          }
+        }
+      }
+
+      deleteMessages(messages);
+
+    };
+
+    const cancelEmbed = new MessageEmbed()
+      .setDescription('**Schedule creation cancelled.**')
+      .setColor('RED');
+
     const meetingDayEmbed = new MessageEmbed()
-      .setDescription('Alright, let\'s create this schedule. First of all, in how many days/hours does this meeting take place?')
+      .setDescription('First of all, in how many days/hours does this meeting take place?')
       .setFooter({
         text: 'If this takes place in a day, type `1d`. Use `h` for hours and `m` for minutes'
       });
@@ -76,7 +137,21 @@ module.exports = {
 
       meetingDayCollector.on('collect', m => {
 
-        if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
+        if (m.content === 'default' || m.content === 'd') {
+
+          devMeetingDayString = parseScheduleTime('1d');
+          devMeetingTimeString = '20:00';
+          devReminderTimeString = parseScheduleTime('30m');
+
+          interaction.channel.send('Default schedule created!');
+
+          scheduleSetupComplete();
+
+          return;
+
+        }
+
+        if (m.content === 'cancel') return interaction.channel.send({ embeds: [cancelEmbed] });
 
         const pattern = /^(\d+)([mhd])$/;
         const match = m.content.match(pattern);
@@ -108,7 +183,7 @@ module.exports = {
 
           meetingTimeCollector.on('collect', m => {
 
-            if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
+            if (m.content === 'cancel') return interaction.channel.send({ embeds: [cancelEmbed] });
 
             if (!checkFormat(m.content)) return interaction.channel.send('Please use the `h:m` (hour,minute) format. \nIf this takes place in an hour, type `1h`. Use `m` for minutes');
 
@@ -137,7 +212,7 @@ module.exports = {
 
               reminderTimeCollector.on('collect', m => {
 
-                if (m.content === 'cancel') return interaction.channel.send('Schedule creation cancelled.');
+                if (m.content === 'cancel') return interaction.channel.send({ embeds: [cancelEmbed] });
 
                 const pattern = /^(\d+)([mhd])$/;
                 const match = m.content.match(pattern);
@@ -160,61 +235,10 @@ module.exports = {
 
                 sentMessage.channel.send({ embeds: [successEmbed] }).then(sentMessage => {
 
-                  const obj = {
-                    interaction: interaction,
-                    identifier: identifier,
-                    name: `${interaction.channel.parent.name}`,
-                    creationChannel: `${interaction.channel.name}`,
-                    channelID: `${interaction.channel.id}`,
-                    creationDate: `${interaction.createdAt}`,
-                    creationDateInUnix: `${Math.floor(Date.now() / 1000)}`,
-                    description: `${interaction.options.getString('description')}`,
-                    scheduleCreator: `${interaction.member}`,
-                    scheduleCreatorID: `${interaction.member.id}`,
-                    meetingDay: `${devMeetingDayString}`,
-                    meetingTime: `${devMeetingTimeString}`,
-                    reminderDate: `${devReminderTimeString}`,
-                    users: {
-                      userOne: `${interaction.options.getMember('user-one')}`,
-                      userTwo: `${interaction.options.getMember('user-second')}`,
-                      userThree: `${interaction.options.getMember('user-third')}`,
-                      userFour: `${interaction.options.getMember('user-fourth')}`,
-                      userFive: `${interaction.options.getMember('user-fith')}`,
-                      userSix: `${interaction.options.getMember('user-sixth')}`,
-                      userSeven: `${interaction.options.getMember('user-seventh')}`,
-                      userEight: `${interaction.options.getMember('user-eighth')}`,
-                      userNine: `${interaction.options.getMember('user-nine')}`,
-                      userTen: `${interaction.options.getMember('user-ten')}`,
-                    },
-                  }
-
-                  saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
-
                   messages.push(sentMessage);
                   messages.push(m);
 
-                  async function deleteMessages(messages) {
-
-                    for (let i = 0; i < messages.length; i++) {
-
-                      await wait(1000);
-
-                      console.log('Deleting message: ', messages[i].content);
-                      console.log(`Deleting message number ${i + 1} out of ${messages.length} messages.`);
-
-                      try {
-
-                        await messages[i].delete();
-
-                      } catch (err) {
-
-                        console.log('Error deleting message: ', err);
-
-                      }
-                    }
-                  }
-
-                  deleteMessages(messages);
+                  scheduleSetupComplete();
 
                 });
               });
