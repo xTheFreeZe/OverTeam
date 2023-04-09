@@ -1,14 +1,7 @@
-const { v4: uuidv4 } = require('uuid');
+const redisClient = require('./redisClient');
 
-const uuid = uuidv4();
+redisClient.keys('*', (err, keys) => {
+  if (err) return console.log(err);
 
-const crypto = require('crypto');
-
-function hashUUID(uuid) {
-  const hash = crypto.createHash('MD5').update(uuid).digest('hex');
-  return hash.substring(0, 8);
-}
-
-const hash = hashUUID(uuid);
-
-console.log(hash);
+  console.log(keys);
+});
