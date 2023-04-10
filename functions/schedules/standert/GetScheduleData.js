@@ -29,6 +29,9 @@ const GetScheduleData = async (identifier) => {
     identifier: identifier
   });
 
+  // If no data is found, return null
+  if (!data) return null;
+
   const obj = {
     interaction: data.interaction,
     identifier: data.identifier,

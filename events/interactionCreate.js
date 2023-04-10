@@ -14,8 +14,8 @@ module.exports = {
     // Get the data from the database.
     const data = await GetScheduleData(identifier);
 
-    // console.log('Data:', data);
-    
+    if (data === null) return interaction.reply('It appears that this schedule does not exist! This should not happen, please contact the developer!');
+
     interaction.reply('Button pressed. Custom ID: ' + interaction.customId);
 
   }

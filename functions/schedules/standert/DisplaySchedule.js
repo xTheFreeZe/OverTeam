@@ -16,6 +16,8 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
   const noEmoji = "<:OverTeam_No:1074131594593452134>";
   const tentativeEmoji = "<:OverTeam_Tentative:1074131651132666017>";
 
+  if (data === null) return interactionchannel.send('It appears that this schedule does not exist! This should not happen, please contact the developer!');
+
   console.log(data);
 
   const scheduleName = data.name;
