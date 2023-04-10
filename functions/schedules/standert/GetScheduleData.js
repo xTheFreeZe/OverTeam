@@ -1,5 +1,5 @@
 const ScheduleSnapShotSchema = require('../../../databaseschemas/ScheduleSnapShotSchema.js');
-const redisClient = require('../../../redisClient.js');
+const { scheduleInCache, saveScheduleInCache } = require('../../../cache/scheduleInCache.js');
 
 // eslint-disable-next-line no-unused-vars
 const colors = require('colors');
@@ -10,27 +10,20 @@ const colors = require('colors');
  */
 const GetScheduleData = async (identifier) => {
 
-  console.log(`Looking in database after: ${identifier}`.blue);
+  console.log(`Looking in cache after: ${identifier}`.yellow);
 
-  redisClient.get(identifier, async (err, data) => {
+  const cacheSchedule = await scheduleInCache(identifier);
 
-    if (err) throw err;
+  if (cacheSchedule) {
 
-    if (data !== null) {
+    console.log('Found in cache'.green.bold);
+    return cacheSchedule;
 
-      console.log('Found in redis cache!'.green.bold);
+  } else {
 
-      //If the data is found in the cache, we return it
-      return JSON.parse(data);
+    console.log('Not in cache, looking in database'.red.bold);
 
-    }
-
-    //We know that the data is not in the cache
-    console.log('Not found in redis cache!'.red.bold);
-
-  });
-
-  console.log('Looking in database after:', identifier);
+  }
 
   const data = await ScheduleSnapShotSchema.findOne({
     identifier: identifier
@@ -64,19 +57,14 @@ const GetScheduleData = async (identifier) => {
     },
   };
 
-  redisClient.set(identifier, JSON.stringify(obj), (err) => {
+  console.log('Found in database'.green.bold);
 
-    if (err) {
+  if (!cacheSchedule) {
 
-      console.error(err);
+    console.log('Not yet in Cache - Saving schedule to cache'.blue.bold);
+    await saveScheduleInCache(identifier, obj);
 
-    } else {
-
-      console.log('Saved in redis cache!'.yellow.bold);
-
-    }
-
-  });
+  }
 
   return obj;
 

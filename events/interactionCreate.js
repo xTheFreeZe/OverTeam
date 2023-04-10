@@ -14,7 +14,7 @@ module.exports = {
     // Get the data from the database.
     const data = await GetScheduleData(identifier);
 
-    console.log('Data:', data);
+    // console.log('Data:', data);
     
     interaction.reply('Button pressed. Custom ID: ' + interaction.customId);
 
