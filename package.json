@@ -15,8 +15,8 @@
     "dotenv": "^10.0.0",
     "eslint": "^8.25.0",
     "mongoose": "^6.9.0",
+    "node-cache": "^5.1.2",
     "node-cron": "^3.0.2",
-    "redis": "^4.6.5",
     "unix-timestamp": "^1.0.2",
     "uuid": "^9.0.0",
     "ws": "^8.12.0"
