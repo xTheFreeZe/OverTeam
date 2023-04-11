@@ -45,6 +45,8 @@ module.exports = {
 
   async execute(interaction) {
 
+    const neutralEmoji = "<:OverTeam_Neutral:1074132245696233573>";
+
     const identifier = `${generateUniqueID()}`;
     interaction.reply('If you want to cancel, type `cancel` **anytime**. For a default schedule, type `default/d` **now**. \n\n A default schedule will be created with the following settings: \n\n **Meeting day:** 1 day \n **Meeting time:** 20:00 \n **Reminder time:** 30 m \n **Description:** No description provided.');
 
@@ -89,7 +91,20 @@ module.exports = {
           userNine: `${interaction.options.getMember('user-nine')}`,
           userTen: `${interaction.options.getMember('user-ten')}`,
         },
-      }
+        //User one is always required, so we can use it as the default value.
+        reactions: {
+          reactionOne: neutralEmoji,
+          reactionTwo: interaction.options.getMember('user-second') ? neutralEmoji : "",
+          reactionThree: interaction.options.getMember('user-third') ? neutralEmoji : "",
+          reactionFour: interaction.options.getMember('user-fourth') ? neutralEmoji : "",
+          reactionFive: interaction.options.getMember('user-fith') ? neutralEmoji : "",
+          reactionSix: interaction.options.getMember('user-sixth') ? neutralEmoji : "",
+          reactionSeven: interaction.options.getMember('user-seventh') ? neutralEmoji : "",
+          reactionEight: interaction.options.getMember('user-eighth') ? neutralEmoji : "",
+          reactionNine: interaction.options.getMember('user-nine') ? neutralEmoji : "",
+          reactionTen: interaction.options.getMember('user-ten') ? neutralEmoji : "",
+        }
+      };
 
       saveScheduleTODB(identifier, interaction.channel, obj); //Send the data over to this function to save it to the database.
 

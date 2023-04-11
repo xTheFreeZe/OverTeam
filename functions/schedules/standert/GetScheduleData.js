@@ -58,6 +58,18 @@ const GetScheduleData = async (identifier) => {
       userNine: data.users.userNine,
       userTen: data.users.userTen,
     },
+    reactions: {
+      reactionOne: data.reactions.reactionOne,
+      reactionTwo: data.reactions.reactionTwo,
+      reactionThree: data.reactions.reactionThree,
+      reactionFour: data.reactions.reactionFour,
+      reactionFive: data.reactions.reactionFive,
+      reactionSix: data.reactions.reactionSix,
+      reactionSeven: data.reactions.reactionSeven,
+      reactionEight: data.reactions.reactionEight,
+      reactionNine: data.reactions.reactionNine,
+      reactionTen: data.reactions.reactionTen
+    }
   };
 
   console.log('Found in database'.green.bold);

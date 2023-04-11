@@ -44,6 +44,18 @@ const ScheduleSnapShotSchema = new mongoose.Schema({
     userNine: nonRequiredString,
     userTen: nonRequiredString,
   },
+  reactions: {
+    reactionOne: nonRequiredString,
+    reactionTwo: nonRequiredString,
+    reactionThree: nonRequiredString,
+    reactionFour: nonRequiredString,
+    reactionFive: nonRequiredString,
+    reactionSix: nonRequiredString,
+    reactionSeven: nonRequiredString,
+    reactionEight: nonRequiredString,
+    reactionNine: nonRequiredString,
+    reactionTen: nonRequiredString
+  }
 });
 
 module.exports = mongoose.model('ScheduleSnapShotSchema', ScheduleSnapShotSchema);

@@ -34,6 +34,18 @@ const saveScheduleTODB = async (identifier, channel, object) => {
       userNine: object.users.userNine,
       userTen: object.users.userTen,
     },
+    reactions: {
+      reactionOne: object.reactions.reactionOne,
+      reactionTwo: object.reactions.reactionTwo,
+      reactionThree: object.reactions.reactionThree,
+      reactionFour: object.reactions.reactionFour,
+      reactionFive: object.reactions.reactionFive,
+      reactionSix: object.reactions.reactionSix,
+      reactionSeven: object.reactions.reactionSeven,
+      reactionEight: object.reactions.reactionEight,
+      reactionNine: object.reactions.reactionNine,
+      reactionTen: object.reactions.reactionTen
+    }
   });
 
 
