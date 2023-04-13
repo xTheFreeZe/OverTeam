@@ -18,8 +18,6 @@ const DisplaySchedule = async (indentifier, interactionchannel) => {
 
   if (data === null) return interactionchannel.send('It appears that this schedule does not exist! This should not happen, please contact the developer!');
 
-  console.log(data);
-
   const scheduleName = data.name;
   const scheduleCreationDateInUnix = data.creationDateInUnix;
   const scheduleDescription = data.description === "null" ? "React to change your availability!" : data.description;
